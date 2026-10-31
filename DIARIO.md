@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 (base Astro + Tailwind), 2 (identidade visual), 3 (imagens) e 4 (conteúdo) concluídas; próxima é a etapa 5 (componentes).
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 (base Astro + Tailwind), 2 (identidade visual), 3 (imagens), 4 (conteúdo) e 5 (componentes) concluídas; próxima é a etapa 6 (design e acabamento).
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção.
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -90,18 +90,24 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - Cada etapa tem a sua branch (`feature/etapa-N-...`), é verificada, revisada, vai para a `main` por Pull Request (PR) e a branch é apagada. Mudanças só de documentação (`DIARIO.md`, `CLAUDE.md`) vão direto na `main`.
   - Skills usadas a partir da etapa 3: `executing-plans`, `verification-before-completion` e `requesting-code-review` (revisor independente antes de cada PR). Registrado no `CLAUDE.md`. Outras entram só na etapa em que fazem sentido (`design-taste-frontend` na 6, `run` na 7, `security-review` e `finishing-a-development-branch` na 9, `systematic-debugging` quando algo quebrar).
   - Adaptações da skill `executing-plans`: uso branch comum em vez de *worktree* (cópia de trabalho separada), porque o projeto tem um só autor; o `DIARIO.md` faz o papel do livro de registro da skill; o `PLANO.md` não está no formato dela, então os testes foram escritos onde cabiam (scripts de verificação), e não em todo passo.
-- **Estado atual:** etapas 1 a 4 prontas, revisadas e na `main` (PRs #1 a #6 incorporados, último merge `d3fd7d9`). Árvore de trabalho limpa. Etapa 4 verificada por 18 testes, pelo verificador de conteúdo, pelo build e pelo teste dos links.
+- **Etapa 5 (componentes e seções):** a home inteira está montada em `src/pages/index.astro`, com um componente por seção em `src/components/` (cabeçalho, chamada, apresentação, treinos, planos, anamnese, comunicação, resultados, inscrição, parceiros, locais, rodapé), mais o WhatsApp flutuante e o banner de cookies (só visual). Peças reutilizáveis: `Base.astro` (layout da página, em `src/layouts/`), `Secao.astro` (moldura das seções), `Botao.astro` e `Foto.astro` (foto otimizada, com `widths` e `sizes` por seção). Todo texto e link vem de `conteudo.ts`.
+- **Verificação (etapa 5):** build, 18 testes e verificador de conteúdo passam. Conferi no HTML gerado que todo link do menu aponta para uma seção que existe, que há um só título principal (`h1`) e que nenhuma imagem está sem `alt`. Olhei capturas de tela no desktop (1280 px) e no celular (500 px).
+- **Decisões (etapa 5):**
+  - Botões verdes levam texto preto (texto branco sobre o verde `#80b522` tem pouco contraste). O verde escuro `#4e8221` pode levar texto branco.
+  - Menu móvel feito com um botão e um pouco de JavaScript (abre, fecha com clique num item ou com Esc).
+  - O UPX Sports, sem foto, mostra um bloco preto com o nome no lugar.
+  - O Chrome não abre janelas com menos de 500 px de largura, então as capturas de celular foram feitas com 500 px. A conferência em 390 px fica para a etapa 7.
+  - A foto do atleta de capacete teve a altura limitada (520 px) no desktop, porque ficava enorme.
+- **Revisão de código da etapa 5 (revisor independente):** 2 achados importantes, corrigidos: o botão "Inscreva-se" do cabeçalho aparecia também no celular (a classe `inline-flex` vencia a `hidden`), e o banner de cookies cobria o botão do WhatsApp. Corrigidos também 6 menores: contorno de foco com contraste baixo, título "Redes sociais" que estava fixo no componente (agora em `conteudo.ts`), script do menu que quebraria se faltasse um elemento, foco perdido ao fechar o menu com Esc, selo "Recomendado" lido antes do nome do plano, e `sizes` da foto da inscrição. **Deixado como está:** os caminhos dos logos (`/logos/logo-cor.png` e `logo-branca.png`) estão escritos direto nos componentes, e não em `conteudo.ts`.
+- **Problema aberto:** nas capturas de celular a foto do Nado Livre saiu em branco. É do teste (fotos abaixo da dobra só carregam quando a tela chega nelas e a captura não rola a página). No desktop ela aparece. Vale conferir de verdade no celular na etapa 7.
+- **Referências pedidas para a etapa 6:** além da skill `design-taste-frontend`, usar como inspiração o site https://profitize.com.br/ (efeitos de cabeçalho e afins) e a ideia da skill `expo-liquid-glass` (efeito de vidro, "liquid glass"). Atenção: essa skill é para apps Expo/React Native (iOS 26), então não serve direto numa página Astro. Na web, o equivalente é feito com CSS (`backdrop-filter: blur()`, fundo translúcido, bordas finas de luz). Usar como referência de visual, adaptando.
+- **Estado atual:** etapas 1 a 5 prontas, revisadas e na `main` (PRs #1 a #7 incorporados, último merge `28d99f9`). Árvore de trabalho limpa. A home já aparece completa em `npm run dev` (`http://localhost:4321`); o visual ainda é o básico, o acabamento é a etapa 6.
 - **Próximos passos (para a sessão nova):**
-  - Dizer "retomar projeto" e, depois do resumo, pedir a Etapa 5.
-  - Antes da Etapa 5, ler os textos em `/teste-conteudo` (`npm run dev`, abrir `http://localhost:4321/teste-conteudo`) e pedir as mudanças de redação que quiser. Mudar texto depois dos componentes dá mais trabalho.
-  - Etapa 5 do `PLANO.md` (componentes e seções): ler tudo de `src/data/conteudo.ts` e das fotos via `obterFoto()` (`src/data/fotos.ts`). Pontos para lembrar:
-    - `texto` é sempre lista de parágrafos.
-    - `locais.itens[0]` (UPX Sports) tem `imagem: null`: o componente precisa tratar a falta de foto.
-    - Definir `widths` e `sizes` das imagens por seção (a chamada principal ocupa a tela toda e precisa de larguras maiores que as da página de teste).
-    - Os textos de acessibilidade (menu, rodapé, cookies, logo) estão em `conteudo.acessibilidade`, `cabecalho.logo`, `rodape` e `cookies`.
-    - Rodar `npm run verificar:conteudo` e `npm test` sempre que mexer em `conteudo.ts`.
+  - Dizer "retomar projeto" e, depois do resumo, pedir a Etapa 6 (design e acabamento).
+  - Etapa 6: usar a skill `design-taste-frontend` e as referências acima (site profitize.com.br para efeitos de cabeçalho; vidro/"liquid glass" feito em CSS). Manter a identidade original reconhecível (verde, preto, Roboto). Ao terminar, tirar capturas de tela no desktop e no celular e revisar antes de seguir.
+  - Pontos para lembrar: foto da chamada principal e do atleta de capacete estão com altura simples (sem tratamento de design); o bloco do UPX Sports é provisório; o botão do WhatsApp flutuante precisa continuar acima do banner de cookies.
   - Apagar antes da entrega as duas páginas temporárias: `src/pages/teste-identidade.astro` e `src/pages/teste-conteudo.astro`.
-  - Pedir ao cliente (ou conferir) fotos melhores: Guilherme, UPX Sports e logos em alta resolução.
+  - Pedir ao cliente (ou conferir) fotos melhores: Guilherme, UPX Sports e logos em alta resolução (a logo do cabeçalho tem só 150 px e fica pequena).
   - Atualizar o `README.md` (ainda é o texto padrão do Astro).
-  - Etapa 7 ou 8: decidir se instalamos o `@astrojs/check` para conferir tipos por comando.
+  - Etapa 7: conferir em 390 px de largura, conferir a foto do Nado Livre no celular real, e decidir se instalamos o `@astrojs/check` para conferir tipos por comando.
   - Etapa 9: conferir de novo o `sharp` como dependência de desenvolvimento e decidir se o link público será publicado (exige autorização).
