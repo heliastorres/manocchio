@@ -1,0 +1,12 @@
+# Arquivos de trabalho do Claude e skills (escolha do usuário)
+DIARIO.md
+CLAUDE.md
+.agents/
+.claude/skills/
+
+# Segredos: nunca versionar
+.env
+
+# Dependências e ambientes locais (podem ser recriados)
+.venv/
+node_modules/
