@@ -1,1 +1,36 @@
 @import "tailwindcss";
+
+/* Fontes (hospedadas no próprio site, via @fontsource) */
+@import "@fontsource-variable/roboto";
+@import "@fontsource/roboto-condensed/400.css";
+@import "@fontsource/roboto-condensed/700.css";
+
+/*
+  Identidade visual: único lugar onde cores e fontes são definidas.
+  Cada variável vira classes do Tailwind, ex.: bg-azul, text-verde, font-titulo.
+*/
+@theme {
+  /* Cores da marca (do site atual) */
+  --color-azul: #003388;
+  --color-verde: #80b522;
+  --color-verde-escuro: #4e8221;
+  --color-preto: #141414;
+  --color-branco: #ffffff;
+
+  /* Cinzas */
+  --color-cinza-100: #f4f4f4;
+  --color-cinza-300: #d4d4d4;
+  --color-cinza-500: #808080;
+  --color-cinza-700: #444444;
+
+  /* Fontes */
+  --font-texto: "Roboto Variable", system-ui, sans-serif;
+  --font-titulo: "Roboto Condensed", "Roboto Variable", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-texto);
+    color: var(--color-preto);
+  }
+}

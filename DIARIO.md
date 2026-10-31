@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapa 1 (base Astro + Tailwind) concluída; próxima é a etapa 2.
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 (base Astro + Tailwind) e 2 (identidade visual) concluídas; próxima é a etapa 3 (imagens).
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção.
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -48,9 +48,17 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **Etapa 1 (base do projeto):** projeto Astro criado na raiz, com TypeScript estrito e Tailwind 4 (via `astro add tailwind`). Nome do pacote: `manocchio`. A página inicial importa o CSS do Tailwind. Testado: `npm run dev` responde HTTP 200 e `npm run build` passa.
 - **Branch:** trabalho feito em `feature/etapa-1-base-astro`, com PR para a `main`.
 - **Problemas:** o instalador do Astro criou a pasta `extinct-equinox/` em vez de usar a raiz. Resolvido movendo os arquivos para a raiz e apagando a pasta (que tinha um repositório git próprio, criado pelo instalador, sem nada importante). O `.gitignore` foi unificado.
-- **Estado atual:** `PLANO.md` commitado (commit `29e042c`). Etapa 1 em revisão.
+- **Etapa 1 verificada:** instalação limpa (`npm ci`) e build passam, TypeScript estrito ativo, árvore git limpa. PR #1 já incorporado à `main`.
+- **Etapa 2 (identidade visual):** cores (azul, verde, verde escuro, preto, branco e 4 cinzas) e fontes (Roboto e Roboto Condensed) definidas num só lugar, `src/styles/global.css`, e viram classes do Tailwind (`bg-azul`, `text-verde`, `font-titulo`...). Logos colorida e branca baixadas para `public/logos/`. Página de teste em `/teste-identidade`.
+- **Decisões (etapa 2):**
+  - Fontes instaladas pelo pacote `@fontsource` (hospedadas no próprio site) em vez do link do Google Fonts: mais rápido e sem enviar dados dos visitantes ao Google.
+  - Cores com nomes em português, como o resto do projeto.
+- **Problemas (etapa 2):** as logos do site atual têm só 150x141 px, pequenas para telas grandes ou de alta densidade. Para usá-las bem maiores, vamos precisar de versões melhores (pedir ao cliente) ou redesenhá-las. O build mostra o azul como `#038`, que é o mesmo `#003388` em forma curta (não é erro).
+- **Estado atual:** etapas 1 e 2 prontas. Verificado por build e por checagem das classes no CSS gerado; ainda não olhei a página de teste em um navegador.
 - **Próximos passos:**
-  - Etapa 2 do `PLANO.md`: identidade visual (cores, fontes e logos como variáveis do Tailwind).
+  - Abrir `/teste-identidade` no navegador (`npm run dev`) e conferir cores, fontes e logos.
+  - Etapa 3 do `PLANO.md`: imagens (baixar, tratar e converter para WebP).
+  - Apagar `src/pages/teste-identidade.astro` antes da entrega (é só uma página temporária).
   - Atualizar o `README.md` (ainda é o texto padrão do Astro).
   - Decidir depois se o link público será publicado (etapa 9, exige autorização).
   - Decidir se `DIARIO.md` e `CLAUDE.md` continuam fora do GitHub (ver aviso nas decisões).
