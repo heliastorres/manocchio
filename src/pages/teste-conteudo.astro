@@ -1,0 +1,149 @@
+---
+// Página TEMPORÁRIA da etapa 4: mostra todo o conteúdo de src/data/conteudo.ts
+// para conferir textos, links e fotos. Apagar antes da entrega.
+import '../styles/global.css';
+import { Image } from 'astro:assets';
+import { conteudo as c } from '../data/conteudo';
+import { obterFoto } from '../data/fotos';
+
+---
+
+<html lang={c.site.idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <title>Teste de conteúdo</title>
+  </head>
+  <body class="p-4 md:p-10 max-w-3xl mx-auto text-preto">
+    <h1 class="font-titulo text-4xl font-bold text-verde-escuro mb-1">Teste de conteúdo</h1>
+    <p class="mb-8 text-cinza-700">Página temporária da etapa 4. Tudo abaixo vem de <code>src/data/conteudo.ts</code>.</p>
+
+    <section class="mb-8 p-4 bg-cinza-100 rounded">
+      <h2 class="font-titulo text-2xl font-bold">Site</h2>
+      <p><strong>{c.site.nome}</strong> · {c.site.idioma}</p>
+      <p>{c.site.titulo}</p>
+      <p class="text-cinza-700">{c.site.descricao}</p>
+    </section>
+
+    <section class="mb-8 p-4 bg-cinza-100 rounded">
+      <h2 class="font-titulo text-2xl font-bold">Menu</h2>
+      <p class="text-sm text-cinza-700">Logo (alt): {c.cabecalho.logo.alt} → {c.cabecalho.logo.href}</p>
+      <ul class="flex flex-wrap gap-2">
+        {c.cabecalho.menu.map((m) => <li><a class="underline" href={m.href}>{m.rotulo}</a></li>)}
+        <li><a class="px-2 bg-verde rounded" href={c.cabecalho.botao.href}>{c.cabecalho.botao.rotulo}</a></li>
+      </ul>
+    </section>
+
+    <section id={c.chamada.id} class="mb-8">
+      <p class="text-sm text-cinza-500">#{c.chamada.id} · chamada principal</p>
+      <h2 class="font-titulo text-3xl font-bold">{c.chamada.titulo}</h2>
+      {c.chamada.texto.map((p) => <p class="mb-2">{p}</p>)}
+      <p class="mb-2 flex gap-3">
+        <a class="px-3 py-1 bg-verde rounded" href={c.chamada.botaoPrincipal.href}>{c.chamada.botaoPrincipal.rotulo}</a>
+        <a class="underline" href={c.chamada.botaoSecundario.href}>{c.chamada.botaoSecundario.rotulo}</a>
+      </p>
+      <Image src={obterFoto(c.chamada.imagem.arquivo)} alt={c.chamada.imagem.alt} widths={[480, 960]} sizes="(min-width: 768px) 720px, 100vw" class="w-full h-40 object-cover rounded" />
+    </section>
+
+    <section id={c.apresentacao.id} class="mb-8">
+      <p class="text-sm text-cinza-500">#{c.apresentacao.id} · {c.apresentacao.chamadaCurta}</p>
+      <h2 class="font-titulo text-3xl font-bold">{c.apresentacao.titulo}</h2>
+      {c.apresentacao.texto.map((p) => <p class="mb-2">{p}</p>)}
+      <Image src={obterFoto(c.apresentacao.imagem.arquivo)} alt={c.apresentacao.imagem.alt} widths={[240, 480]} sizes="240px" class="h-40 w-auto rounded" />
+    </section>
+
+    <section id={c.treinos.id} class="mb-8">
+      <p class="text-sm text-cinza-500">#{c.treinos.id}</p>
+      <h2 class="font-titulo text-3xl font-bold">{c.treinos.titulo}</h2>
+      {c.treinos.texto.map((p) => <p class="mb-2">{p}</p>)}
+      <p class="font-bold mb-1">{c.treinos.rotuloModalidades}</p>
+      <ul class="flex flex-wrap gap-2">
+        {c.treinos.modalidades.map((m) => <li><a class="px-3 py-1 bg-verde rounded" href={m.href}>{m.rotulo}</a></li>)}
+      </ul>
+    </section>
+
+    <section id={c.planos.id} class="mb-8">
+      <p class="text-sm text-cinza-500">#{c.planos.id}</p>
+      <h2 class="font-titulo text-3xl font-bold">{c.planos.titulo}</h2>
+      {c.planos.texto.map((p) => <p class="mb-2">{p}</p>)}
+      <ul class="grid sm:grid-cols-2 gap-3">
+        {c.planos.itens.map((p) => (
+          <li class:list={['p-4 rounded border', p.destaque ? 'border-verde-escuro bg-cinza-100' : 'border-cinza-300']}>
+            <h3 class="font-titulo text-xl font-bold">{p.nome} {p.selo && <span class="text-sm text-verde-escuro">({p.selo})</span>}</h3>
+            <p class="mb-2">{p.descricao}</p>
+            <a class="underline" href={p.botao.href}>{p.botao.rotulo}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {[c.anamnese, c.comunicacao].map((s) => (
+      <section id={s.id} class="mb-8">
+        <p class="text-sm text-cinza-500">#{s.id}</p>
+        <h2 class="font-titulo text-3xl font-bold">{s.titulo}</h2>
+        {s.texto.map((p) => <p class="mb-2">{p}</p>)}
+      </section>
+    ))}
+
+    <section id={c.resultados.id} class="mb-8">
+      <p class="text-sm text-cinza-500">#{c.resultados.id}</p>
+      <h2 class="font-titulo text-3xl font-bold">{c.resultados.titulo}</h2>
+      {c.resultados.texto.map((p) => <p class="mb-2">{p}</p>)}
+      <Image src={obterFoto(c.resultados.imagem.arquivo)} alt={c.resultados.imagem.alt} widths={[480, 960]} sizes="(min-width: 768px) 720px, 100vw" class="w-full h-40 object-cover rounded" />
+    </section>
+
+    <section id={c.inscricao.id} class="mb-8">
+      <p class="text-sm text-cinza-500">#{c.inscricao.id}</p>
+      <h2 class="font-titulo text-3xl font-bold">{c.inscricao.titulo}</h2>
+      {c.inscricao.texto.map((p) => <p class="mb-2">{p}</p>)}
+      <h3 class="font-bold">{c.inscricao.passosTitulo}</h3>
+      <ol class="list-decimal ml-6 mb-2">{c.inscricao.passos.map((p) => <li>{p}</li>)}</ol>
+      <a class="px-3 py-1 bg-verde rounded" href={c.inscricao.botao.href}>{c.inscricao.botao.rotulo}</a>
+      <Image src={obterFoto(c.inscricao.imagem.arquivo)} alt={c.inscricao.imagem.alt} widths={[200, 418]} sizes="200px" class="h-40 w-auto rounded mt-3" />
+    </section>
+
+    <section id={c.parceiros.id} class="mb-8">
+      <p class="text-sm text-cinza-500">#{c.parceiros.id}</p>
+      <h2 class="font-titulo text-3xl font-bold">{c.parceiros.titulo}</h2>
+      {c.parceiros.texto.map((p) => <p class="mb-2">{p}</p>)}
+    </section>
+
+    <section id={c.locais.id} class="mb-8">
+      <p class="text-sm text-cinza-500">#{c.locais.id}</p>
+      <h2 class="font-titulo text-3xl font-bold">{c.locais.titulo}</h2>
+      <ul class="grid sm:grid-cols-3 gap-3">
+        {c.locais.itens.map((l) => (
+          <li class="border border-cinza-300 rounded overflow-hidden">
+            {l.imagem
+              ? <Image src={obterFoto(l.imagem.arquivo)} alt={l.imagem.alt} widths={[240, 480]} sizes="240px" class="w-full h-28 object-cover" />
+              : <div class="h-28 bg-cinza-100 grid place-items-center text-sm text-cinza-500">sem foto ainda</div>}
+            <div class="p-3">
+              <h3 class="font-titulo text-lg font-bold">{l.nome}</h3>
+              <p class="text-cinza-700">{l.complemento}</p>
+              <a class="underline" href={l.href}>{c.locais.textoLink}</a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <footer id={c.contato.id} class="p-4 bg-preto text-branco rounded mb-4">
+      <p class="text-sm text-cinza-300">#{c.contato.id}</p>
+      <h2 class="font-titulo text-2xl font-bold">{c.contato.titulo}</h2>
+      <p>{c.contato.endereco}</p>
+      <p><a class="underline" href={c.contato.email.href}>{c.contato.email.rotulo}</a></p>
+      <p>{c.contato.telefones.map((t) => <a class="underline mr-3" href={t.href}>{t.rotulo}</a>)}</p>
+      <p><a class="underline" href={c.contato.whatsapp.href}>{c.contato.whatsapp.rotulo}</a></p>
+      <p>{c.contato.redes.map((r) => <a class="underline mr-3" href={r.href}>{r.rotulo}</a>)}</p>
+      <p class="mt-2">{c.rodape.copyright} · <a class="underline" href={c.rodape.politica.href}>{c.rodape.politica.rotulo}</a></p>
+    </footer>
+
+    <section class="p-4 bg-cinza-100 rounded">
+      <h2 class="font-titulo text-xl font-bold">Banner de cookies</h2>
+      {c.cookies.texto.map((p) => <p>{p}</p>)}
+      <p><a class="underline" href={c.cookies.politica.href}>{c.cookies.politica.rotulo}</a></p>
+      <p><button class="px-3 py-1 bg-verde rounded">{c.cookies.botao}</button></p>
+    </section>
+  </body>
+</html>
