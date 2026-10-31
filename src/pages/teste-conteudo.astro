@@ -6,7 +6,6 @@ import { Image } from 'astro:assets';
 import { conteudo as c } from '../data/conteudo';
 import { obterFoto } from '../data/fotos';
 
-const paragrafos = (v: string | string[]) => (Array.isArray(v) ? v : [v]);
 ---
 
 <html lang={c.site.idioma}>
@@ -29,6 +28,7 @@ const paragrafos = (v: string | string[]) => (Array.isArray(v) ? v : [v]);
 
     <section class="mb-8 p-4 bg-cinza-100 rounded">
       <h2 class="font-titulo text-2xl font-bold">Menu</h2>
+      <p class="text-sm text-cinza-700">Logo (alt): {c.cabecalho.logo.alt} → {c.cabecalho.logo.href}</p>
       <ul class="flex flex-wrap gap-2">
         {c.cabecalho.menu.map((m) => <li><a class="underline" href={m.href}>{m.rotulo}</a></li>)}
         <li><a class="px-2 bg-verde rounded" href={c.cabecalho.botao.href}>{c.cabecalho.botao.rotulo}</a></li>
@@ -38,7 +38,7 @@ const paragrafos = (v: string | string[]) => (Array.isArray(v) ? v : [v]);
     <section id={c.chamada.id} class="mb-8">
       <p class="text-sm text-cinza-500">#{c.chamada.id} · chamada principal</p>
       <h2 class="font-titulo text-3xl font-bold">{c.chamada.titulo}</h2>
-      <p class="mb-2">{c.chamada.texto}</p>
+      {c.chamada.texto.map((p) => <p class="mb-2">{p}</p>)}
       <p class="mb-2 flex gap-3">
         <a class="px-3 py-1 bg-verde rounded" href={c.chamada.botaoPrincipal.href}>{c.chamada.botaoPrincipal.rotulo}</a>
         <a class="underline" href={c.chamada.botaoSecundario.href}>{c.chamada.botaoSecundario.rotulo}</a>
@@ -49,14 +49,14 @@ const paragrafos = (v: string | string[]) => (Array.isArray(v) ? v : [v]);
     <section id={c.apresentacao.id} class="mb-8">
       <p class="text-sm text-cinza-500">#{c.apresentacao.id} · {c.apresentacao.chamadaCurta}</p>
       <h2 class="font-titulo text-3xl font-bold">{c.apresentacao.titulo}</h2>
-      {paragrafos(c.apresentacao.texto).map((p) => <p class="mb-2">{p}</p>)}
+      {c.apresentacao.texto.map((p) => <p class="mb-2">{p}</p>)}
       <Image src={obterFoto(c.apresentacao.imagem.arquivo)} alt={c.apresentacao.imagem.alt} widths={[240, 480]} sizes="240px" class="h-40 w-auto rounded" />
     </section>
 
     <section id={c.treinos.id} class="mb-8">
       <p class="text-sm text-cinza-500">#{c.treinos.id}</p>
       <h2 class="font-titulo text-3xl font-bold">{c.treinos.titulo}</h2>
-      <p class="mb-2">{c.treinos.texto}</p>
+      {c.treinos.texto.map((p) => <p class="mb-2">{p}</p>)}
       <p class="font-bold mb-1">{c.treinos.rotuloModalidades}</p>
       <ul class="flex flex-wrap gap-2">
         {c.treinos.modalidades.map((m) => <li><a class="px-3 py-1 bg-verde rounded" href={m.href}>{m.rotulo}</a></li>)}
@@ -66,11 +66,11 @@ const paragrafos = (v: string | string[]) => (Array.isArray(v) ? v : [v]);
     <section id={c.planos.id} class="mb-8">
       <p class="text-sm text-cinza-500">#{c.planos.id}</p>
       <h2 class="font-titulo text-3xl font-bold">{c.planos.titulo}</h2>
-      <p class="mb-2">{c.planos.texto}</p>
+      {c.planos.texto.map((p) => <p class="mb-2">{p}</p>)}
       <ul class="grid sm:grid-cols-2 gap-3">
         {c.planos.itens.map((p) => (
           <li class:list={['p-4 rounded border', p.destaque ? 'border-verde-escuro bg-cinza-100' : 'border-cinza-300']}>
-            <h3 class="font-titulo text-xl font-bold">{p.nome} {'selo' in p && <span class="text-sm text-verde-escuro">({p.selo})</span>}</h3>
+            <h3 class="font-titulo text-xl font-bold">{p.nome} {p.selo && <span class="text-sm text-verde-escuro">({p.selo})</span>}</h3>
             <p class="mb-2">{p.descricao}</p>
             <a class="underline" href={p.botao.href}>{p.botao.rotulo}</a>
           </li>
@@ -96,7 +96,7 @@ const paragrafos = (v: string | string[]) => (Array.isArray(v) ? v : [v]);
     <section id={c.inscricao.id} class="mb-8">
       <p class="text-sm text-cinza-500">#{c.inscricao.id}</p>
       <h2 class="font-titulo text-3xl font-bold">{c.inscricao.titulo}</h2>
-      <p class="mb-2">{c.inscricao.texto}</p>
+      {c.inscricao.texto.map((p) => <p class="mb-2">{p}</p>)}
       <h3 class="font-bold">{c.inscricao.passosTitulo}</h3>
       <ol class="list-decimal ml-6 mb-2">{c.inscricao.passos.map((p) => <li>{p}</li>)}</ol>
       <a class="px-3 py-1 bg-verde rounded" href={c.inscricao.botao.href}>{c.inscricao.botao.rotulo}</a>
@@ -141,7 +141,8 @@ const paragrafos = (v: string | string[]) => (Array.isArray(v) ? v : [v]);
 
     <section class="p-4 bg-cinza-100 rounded">
       <h2 class="font-titulo text-xl font-bold">Banner de cookies</h2>
-      <p>{c.cookies.texto} <a class="underline" href={c.cookies.politica.href}>{c.cookies.politica.rotulo}</a></p>
+      {c.cookies.texto.map((p) => <p>{p}</p>)}
+      <p><a class="underline" href={c.cookies.politica.href}>{c.cookies.politica.rotulo}</a></p>
       <p><button class="px-3 py-1 bg-verde rounded">{c.cookies.botao}</button></p>
     </section>
   </body>

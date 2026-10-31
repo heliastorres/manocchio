@@ -76,7 +76,17 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - Os planos Básico e Prime só têm a descrição do site atual. Os valores ficam nas páginas de inscrição de cada modalidade, então os botões de plano levam à seção de treinos.
   - Descartei o bloco "Treinamento presencial" (Triathlon/Corrida/Natação) da home atual: não está nas 12 seções do escopo, e os locais de treino já cobrem o assunto.
   - O menu tem 7 itens por âncora: Sobre, Treinos, Planos, Como funciona, Resultados, Locais e Contato.
-- **Estado atual:** etapas 1 a 4 prontas. Etapa 4 verificada por build, pelo verificador de conteúdo e pelo teste dos links.
+- **Revisão de código da etapa 4 (revisor independente):** nenhum problema crítico. Corrigido, cada item com teste que falhava antes:
+  - O verificador só conferia campos chamados `href`: agora confere qualquer texto que pareça link, aceita só domínios com ponto e checa o número do WhatsApp contra o link.
+  - Listas vazias passavam sem aviso: agora são erro.
+  - O campo `texto` ora era texto, ora lista: agora é sempre lista de parágrafos (e o verificador exige). Isso evita erro nos componentes da etapa 5.
+  - O botão dos planos dizia "Ver valores", mas a seção de destino não mostra valores: virou "Escolher modalidade".
+  - Link da política de privacidade estava repetido: agora é definido uma vez só.
+  - Textos do logo e de acessibilidade (menu, rodapé, banner de cookies) entraram no arquivo de dados, para os componentes não terem texto fixo.
+  - Os 8 testes do verificador que eu fazia à mão viraram testes automáticos (`npm test`, 18 testes ao todo).
+- **Anotado, sem mexer (menores):** o verificador compara o fim do caminho para achar `id` e `arquivo` (basta hoje); `cookies.botao` e `site.idioma` são textos simples e não `{rotulo, href}`.
+- **Limite:** o TypeScript não está instalado no projeto, então a conferência de tipos só acontece no editor (VS Code), não por comando. Vale decidir na etapa 7 ou 8 se adicionamos `@astrojs/check`.
+- **Estado atual:** etapas 1 a 4 prontas e revisadas. Etapa 4 verificada por 18 testes, pelo verificador de conteúdo, pelo build e pelo teste dos links.
 - **Próximos passos:**
   - Revisar os textos em `/teste-conteudo` (`npm run dev`) e pedir mudanças se quiser.
   - Etapa 5 do `PLANO.md`: componentes e seções, lendo os dados de `src/data/conteudo.ts`.

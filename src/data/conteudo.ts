@@ -7,9 +7,13 @@
  * Depois de editar, rode `npm run verificar:conteudo` para conferir links,
  * âncoras e fotos.
  *
- * Regras:
- *  - `href` é sempre um link: https://..., mailto:..., tel:+... ou #id-de-uma-secao.
+ * Como editar (regras que o verificador confere):
+ *  - `texto` é SEMPRE uma lista de parágrafos: ['primeiro parágrafo', 'segundo'].
+ *    Para um parágrafo só, uma lista com um item.
+ *  - Todo link é https://..., mailto:..., tel:+55... ou #id-de-uma-secao.
+ *    Chame o campo de `href`.
  *  - `imagem.arquivo` é o nome da foto em src/assets/fotos (sem o .webp).
+ *  - Toda foto precisa de `alt` (texto que descreve a foto para quem usa leitor de tela).
  *  - Links para páginas que ainda não existem neste protótipo apontam para o
  *    site atual (manocchiosports.com).
  */
@@ -30,6 +34,16 @@ export interface Imagem {
   alt: string;
 }
 
+export interface Plano {
+  nome: string;
+  descricao: string;
+  /** Plano em destaque (o recomendado). */
+  destaque: boolean;
+  /** Etiqueta opcional, ex.: "Recomendado". */
+  selo?: string;
+  botao: Link;
+}
+
 // ---------------------------------------------------------------------------
 // Dados de contato (usados no rodapé, no WhatsApp e nos botões de inscrição)
 // ---------------------------------------------------------------------------
@@ -41,6 +55,9 @@ const whatsappMensagem =
 /** Link que abre uma conversa no WhatsApp (celular ou computador) com a mensagem pronta. */
 const whatsappHref = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(whatsappMensagem)}`;
 
+/** Política de privacidade: usada no rodapé e no banner de cookies. */
+const politicaHref = 'https://manocchiosports.com/politica-de-privacidade';
+
 // ---------------------------------------------------------------------------
 // Conteúdo
 // ---------------------------------------------------------------------------
@@ -50,7 +67,7 @@ export const conteudo = {
     nome: 'Manocchio Team',
     titulo: 'Manocchio Team | Assessoria esportiva em Curitiba',
     descricao:
-      'Assessoria esportiva de triathlon, corrida, natação e ciclismo, a distância ou presencial em Curitiba, com a metodologia do Head Coach Guilherme Manocchio.',
+      'Assessoria esportiva de triathlon, corrida, natação e ciclismo em Curitiba, a distância ou presencial, com a metodologia do Head Coach Guilherme Manocchio.',
     idioma: 'pt-BR',
   },
 
@@ -77,6 +94,7 @@ export const conteudo = {
 
   // Cabeçalho: o menu leva até cada seção da página (RF2).
   cabecalho: {
+    logo: { alt: 'Manocchio Team: ir para o início da página', href: '#inicio' },
     menu: [
       { rotulo: 'Sobre', href: '#apresentacao' },
       { rotulo: 'Treinos', href: '#treinos' },
@@ -93,8 +111,9 @@ export const conteudo = {
   chamada: {
     id: 'inicio',
     titulo: 'Mais que um esporte, um estilo de vida',
-    texto:
+    texto: [
       'Assessoria esportiva de triathlon, corrida, natação e ciclismo para atletas amadores, a distância ou presencial em Curitiba.',
+    ],
     botaoPrincipal: { rotulo: 'Tire suas dúvidas e inscreva-se', href: whatsappHref },
     botaoSecundario: { rotulo: 'Conheça os treinos', href: '#treinos' },
     imagem: {
@@ -122,9 +141,13 @@ export const conteudo = {
   treinos: {
     id: 'treinos',
     titulo: 'Seus treinos de forma prática, simples e eficaz',
-    texto:
+    texto: [
       'Escolha a modalidade, preencha a ficha de inscrição e finalize o pagamento por boleto ou cartão. Deixe que a gente ajude você a executar o seu planejamento esportivo com profissionalismo e seriedade.',
+    ],
     rotuloModalidades: 'Treinamento online',
+    // Igual ao site atual: o Duathlon usa a mesma página de inscrição do Triathlon, e a
+    // Natação usa um link encurtado (bit.ly) que leva ao sistema de inscrição.
+    // Se algum deles mudar, é só trocar aqui.
     modalidades: [
       { rotulo: 'Triathlon', href: 'https://manocchiosports.com/tri-online/' },
       { rotulo: 'Corrida', href: 'https://manocchiosports.com/corrida-online/' },
@@ -138,14 +161,17 @@ export const conteudo = {
   planos: {
     id: 'planos',
     titulo: 'Escolha seu formato de plano',
-    texto:
+    texto: [
       'O plano Básico atende o essencial. Para quem gosta de uma atenção diferenciada, está começando em uma modalidade ou já tem um objetivo em mente, o recomendado é o Prime. Você escolhe o que melhor se encaixa na sua realidade.',
+    ],
     itens: [
       {
         nome: 'Básico',
         descricao: 'Atende a necessidade essencial do atleta.',
         destaque: false,
-        botao: { rotulo: 'Ver valores', href: '#treinos' },
+        // Os valores aparecem na página de inscrição de cada modalidade, por isso o botão
+        // leva à escolha da modalidade (e não promete preços aqui).
+        botao: { rotulo: 'Escolher modalidade', href: '#treinos' },
       },
       {
         nome: 'Prime',
@@ -153,9 +179,9 @@ export const conteudo = {
           'Atenção diferenciada, indicada para quem está começando na modalidade ou tem um objetivo definido.',
         destaque: true,
         selo: 'Recomendado',
-        botao: { rotulo: 'Ver valores', href: '#treinos' },
+        botao: { rotulo: 'Escolher modalidade', href: '#treinos' },
       },
-    ],
+    ] satisfies Plano[],
   },
 
   // 5. Anamnese
@@ -197,11 +223,12 @@ export const conteudo = {
   inscricao: {
     id: 'inscricao',
     titulo: 'Inscreva-se',
-    texto:
+    texto: [
       'Nosso time de treinadores segue a metodologia desenvolvida pelo Head Coach Guilherme Manocchio. Para treinar diretamente com o Guilherme, solicite uma planilha à parte.',
+    ],
     passosTitulo: 'Como funciona a inscrição',
     passos: [
-      'Clique na modalidade, escolha o formato de atendimento e preencha o link de inscrição.',
+      'Clique na modalidade, escolha o formato de atendimento e preencha a inscrição no link que abrir.',
       'O boleto para pagamento é gerado automaticamente.',
       'Quer pagar por Pix ou receber os treinos mais rápido? Envie o comprovante pelo WhatsApp.',
       'Com o pagamento confirmado, você recebe a ficha de anamnese para preencher.',
@@ -259,22 +286,27 @@ export const conteudo = {
 
   // Rodapé
   rodape: {
+    rotuloAcessibilidade: 'Rodapé',
     copyright: '© Manocchio Team',
-    politica: {
-      rotulo: 'Política de privacidade',
-      href: 'https://manocchiosports.com/politica-de-privacidade',
-    },
+    politica: { rotulo: 'Política de privacidade', href: politicaHref },
   },
 
   // Banner de cookies (só visual, RF6)
   cookies: {
-    texto:
+    rotuloAcessibilidade: 'Aviso de cookies',
+    texto: [
       'Usamos cookies para lembrar suas preferências e melhorar a sua experiência no site. Ao clicar em “Aceitar”, você concorda com o uso dos cookies.',
+    ],
     botao: 'Aceitar',
-    politica: {
-      rotulo: 'Leia nossa Política de privacidade',
-      href: 'https://manocchiosports.com/politica-de-privacidade',
-    },
+    politica: { rotulo: 'Leia nossa Política de privacidade', href: politicaHref },
+  },
+
+  // Textos que só leitores de tela leem (ficam escondidos na tela, mas precisam existir)
+  acessibilidade: {
+    menuAbrir: 'Abrir menu',
+    menuFechar: 'Fechar menu',
+    menuPrincipal: 'Menu principal',
+    pularParaConteudo: 'Pular para o conteúdo',
   },
 
   // Botão flutuante do WhatsApp (RF6)
