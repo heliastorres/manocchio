@@ -1,46 +1,65 @@
 ---
 import { conteudo } from '../data/conteudo';
 
-const { contato, rodape } = conteudo;
+const { contato, rodape, site } = conteudo;
+const classeLink = 'underline underline-offset-4 transition-colors hover:text-verde focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-branco';
 ---
 
-<footer id={contato.id} aria-label={rodape.rotuloAcessibilidade} class="bg-preto text-branco">
-  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 md:grid-cols-3 md:px-6">
-    <div>
-      <img src="/logos/logo-branca.png" alt={conteudo.site.nome} width="150" height="141" class="h-24 w-auto" loading="lazy" />
-      <p class="mt-4 text-cinza-300">{contato.endereco}</p>
+<!-- Rodapé: o nome da marca volta em largura total (escrito com texto, não é imagem) -->
+<footer id={contato.id} aria-label={rodape.rotuloAcessibilidade} class="overflow-hidden bg-preto text-branco">
+  <div class="mx-auto max-w-7xl px-4 pb-8 pt-20 md:px-8 md:pt-28">
+    <div class="grid gap-12 md:grid-cols-12 md:gap-16">
+      <div class="md:col-span-4">
+        <img src="/logos/logo-branca.png" alt={site.nome} width="150" height="141" class="h-24 w-auto" loading="lazy" />
+        <p class="mt-6 text-lg">{contato.endereco}</p>
+      </div>
+      <div class="md:col-span-4">
+        <h2 class="font-titulo text-linha font-bold uppercase leading-none">{contato.titulo}</h2>
+        <ul class="mt-6 space-y-3 text-lg">
+          <li><a class={classeLink} href={contato.email.href}>{contato.email.rotulo}</a></li>
+          {contato.telefones.map((t) => <li><a class={classeLink} href={t.href}>{t.rotulo}</a></li>)}
+          <li>
+            <a class={classeLink} href={contato.whatsapp.href} target="_blank" rel="noopener noreferrer">
+              {contato.whatsapp.rotulo}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="md:col-span-4">
+        <h2 class="font-titulo text-linha font-bold uppercase leading-none">{contato.redesTitulo}</h2>
+        <ul class="mt-6 space-y-3 text-lg">
+          {
+            contato.redes.map((r) => (
+              <li>
+                <a class={classeLink} href={r.href} target="_blank" rel="noopener noreferrer">
+                  {r.rotulo}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
-    <div>
-      <h2 class="font-titulo text-2xl font-bold uppercase">{contato.titulo}</h2>
-      <ul class="mt-4 space-y-2">
-        <li><a class="underline underline-offset-4 hover:text-verde" href={contato.email.href}>{contato.email.rotulo}</a></li>
-        {contato.telefones.map((t) => <li><a class="underline underline-offset-4 hover:text-verde" href={t.href}>{t.rotulo}</a></li>)}
-        <li>
-          <a class="underline underline-offset-4 hover:text-verde" href={contato.whatsapp.href} target="_blank" rel="noopener noreferrer">
-            {contato.whatsapp.rotulo}
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div>
-      <h2 class="font-titulo text-2xl font-bold uppercase">{contato.redesTitulo}</h2>
-      <ul class="mt-4 space-y-2">
-        {
-          contato.redes.map((r) => (
-            <li>
-              <a class="underline underline-offset-4 hover:text-verde" href={r.href} target="_blank" rel="noopener noreferrer">
-                {r.rotulo}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </div>
-  <div class="border-t border-cinza-700">
-    <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-sm text-cinza-300 sm:flex-row sm:justify-between md:px-6">
+
+    <!-- Nome em largura total: o SVG estica o texto para caber exatamente na largura -->
+    <svg viewBox="0 0 1000 190" class="mt-20 w-full text-verde md:mt-28" aria-hidden="true" focusable="false">
+      <text
+        x="0"
+        y="170"
+        textLength="1000"
+        lengthAdjust="spacingAndGlyphs"
+        fill="currentColor"
+        font-family="'Roboto Condensed', sans-serif"
+        font-weight="700"
+        font-size="230"
+      >
+        MANOCCHIO
+      </text>
+    </svg>
+
+    <div class="mt-10 flex flex-col gap-2 text-base sm:flex-row sm:justify-between">
       <p>{rodape.copyright}</p>
-      <a class="underline underline-offset-4 hover:text-verde" href={rodape.politica.href} target="_blank" rel="noopener noreferrer">
+      <a class={classeLink} href={rodape.politica.href} target="_blank" rel="noopener noreferrer">
         {rodape.politica.rotulo}
       </a>
     </div>

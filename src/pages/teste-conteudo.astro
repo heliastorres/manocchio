@@ -47,7 +47,7 @@ import { obterFoto } from '../data/fotos';
     </section>
 
     <section id={c.apresentacao.id} class="mb-8">
-      <p class="text-sm text-cinza-500">#{c.apresentacao.id} · {c.apresentacao.chamadaCurta}</p>
+      <p class="text-sm text-cinza-500">#{c.apresentacao.id}</p>
       <h2 class="font-titulo text-3xl font-bold">{c.apresentacao.titulo}</h2>
       {c.apresentacao.texto.map((p) => <p class="mb-2">{p}</p>)}
       <Image src={obterFoto(c.apresentacao.imagem.arquivo)} alt={c.apresentacao.imagem.alt} widths={[240, 480]} sizes="240px" class="h-40 w-auto rounded" />

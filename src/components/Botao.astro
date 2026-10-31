@@ -1,17 +1,21 @@
 ---
 // Botão em forma de link. Links externos (https://...) abrem em outra aba.
+// O formato (cantos de folha) está na classe "botao", em src/styles/global.css.
 interface Props {
   href: string;
-  variante?: 'primario' | 'secundario' | 'escuro';
+  variante?: 'primario' | 'secundario' | 'escuro' | 'claro';
   class?: string;
 }
 const { href, variante = 'primario', class: extra = '' } = Astro.props;
 const externo = href.startsWith('http');
 
 const estilos = {
-  primario: 'bg-verde text-preto hover:bg-verde-escuro hover:text-branco',
-  secundario: 'border-2 border-branco text-branco hover:bg-branco hover:text-preto',
-  escuro: 'bg-preto text-branco hover:bg-verde-escuro',
+  primario: 'bg-verde text-preto hover:bg-branco',
+  // Sobre fundo escuro ou foto: preenchido de branco (sem contorno fino)
+  secundario: 'bg-branco/15 text-branco hover:bg-branco hover:text-preto',
+  escuro: 'bg-preto text-branco hover:bg-verde hover:text-preto',
+  // Sobre verde ou verde escuro
+  claro: 'bg-branco text-preto hover:bg-preto hover:text-branco',
 };
 ---
 
@@ -19,11 +23,7 @@ const estilos = {
   href={href}
   target={externo ? '_blank' : undefined}
   rel={externo ? 'noopener noreferrer' : undefined}
-  class:list={[
-    'inline-flex items-center justify-center px-6 py-3 font-titulo text-lg font-bold uppercase tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verde-escuro',
-    estilos[variante],
-    extra,
-  ]}
+  class:list={['botao', estilos[variante], extra]}
 >
   <slot />
 </a>

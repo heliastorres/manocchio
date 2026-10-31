@@ -1,26 +1,27 @@
 ---
 import { conteudo } from '../data/conteudo';
+import Secao from './Secao.astro';
 import Foto from './Foto.astro';
 
 const { apresentacao } = conteudo;
 ---
 
-<section id={apresentacao.id} aria-labelledby="apresentacao-titulo" class="bg-branco">
-  <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:gap-14 md:px-6 md:py-24">
-    <div>
-      <p class="font-titulo text-lg font-bold uppercase tracking-wide text-verde-escuro">{apresentacao.chamadaCurta}</p>
-      <h2 id="apresentacao-titulo" class="mt-2 font-titulo text-3xl font-bold uppercase leading-tight md:text-4xl">
-        {apresentacao.titulo}
-      </h2>
-      <div class="mt-6 space-y-4 text-lg text-cinza-700">
-        {apresentacao.texto.map((p) => <p>{p}</p>)}
+<!-- Foto vertical em folha à esquerda, título e texto à direita -->
+<Secao id={apresentacao.id} fundo="branco">
+  <div class="grid items-center gap-12 md:grid-cols-12 md:gap-16">
+    <div class="md:col-span-5" data-revelar>
+      <Foto
+        imagem={apresentacao.imagem}
+        widths={[480, 720, 1000]}
+        sizes="(min-width: 1280px) 480px, (min-width: 768px) 42vw, 100vw"
+        class="folha aspect-[4/5] w-full object-cover"
+      />
+    </div>
+    <div class="md:col-span-7">
+      <h2 id="apresentacao-titulo" data-revelar class="titulo-secao">{apresentacao.titulo}</h2>
+      <div class="mt-8 max-w-2xl space-y-5">
+        {apresentacao.texto.map((p) => <p data-revelar class="texto-corrido">{p}</p>)}
       </div>
     </div>
-    <Foto
-      imagem={apresentacao.imagem}
-      widths={[480, 720, 1000]}
-      sizes="(min-width: 1152px) 560px, (min-width: 768px) 45vw, 100vw"
-      class="h-auto max-h-[520px] w-full object-cover"
-    />
   </div>
-</section>
+</Secao>

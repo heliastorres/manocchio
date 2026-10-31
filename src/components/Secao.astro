@@ -1,33 +1,25 @@
 ---
-// Moldura comum das seções: id (âncora do menu), largura máxima e margens.
+// Moldura comum das seções: id (âncora do menu), cor do fundo, margens iguais dos dois lados.
+// O título (h2) fica por conta de cada seção, porque cada uma o posiciona de um jeito.
+// O h2 precisa ter id={`${id}-titulo`}.
 interface Props {
   id: string;
-  titulo: string;
-  fundo?: 'claro' | 'cinza' | 'escuro';
-  centralizado?: boolean;
+  fundo?: 'branco' | 'cinza' | 'preto' | 'verde' | 'verde-escuro';
+  class?: string;
 }
-const { id, titulo, fundo = 'claro', centralizado = false } = Astro.props;
+const { id, fundo = 'branco', class: extra = '' } = Astro.props;
 
 const fundos = {
-  claro: 'bg-branco text-preto',
+  branco: 'bg-branco text-preto',
   cinza: 'bg-cinza-100 text-preto',
-  escuro: 'bg-preto text-branco',
+  preto: 'bg-preto text-branco',
+  verde: 'bg-verde text-preto',
+  'verde-escuro': 'bg-verde-escuro text-branco',
 };
 ---
 
-<section id={id} aria-labelledby={`${id}-titulo`} class={fundos[fundo]}>
-  <div class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-24">
-    <h2
-      id={`${id}-titulo`}
-      class:list={[
-        'font-titulo text-3xl font-bold uppercase leading-tight md:text-4xl',
-        centralizado && 'text-center',
-      ]}
-    >
-      {titulo}
-    </h2>
-    <div class:list={['mt-6', centralizado && 'mx-auto text-center']}>
-      <slot />
-    </div>
+<section id={id} aria-labelledby={`${id}-titulo`} class:list={['relative overflow-clip', fundos[fundo], extra]}>
+  <div class="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-28">
+    <slot />
   </div>
 </section>

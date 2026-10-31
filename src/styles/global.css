@@ -25,11 +25,150 @@
   /* Fontes */
   --font-texto: "Roboto Variable", system-ui, sans-serif;
   --font-titulo: "Roboto Condensed", "Roboto Variable", system-ui, sans-serif;
+
+  /* Escala de tipos (só estes tamanhos na página) */
+  --text-display: clamp(2.05rem, 6.6vw, 6.5rem); /* título da chamada principal */
+  --text-titulo: clamp(1.875rem, 4.6vw, 4.25rem); /* título de cada seção */
+  --text-linha: clamp(1.75rem, 3.4vw, 2.75rem); /* linhas grandes (modalidades, locais, planos) */
 }
 
 @layer base {
   html {
     font-family: var(--font-texto);
     color: var(--color-preto);
+  }
+}
+
+/*
+  A FOLHA: forma tirada do arco verde da logo. É o único "enfeite" da página e
+  aparece em vários tamanhos: foto da chamada, fotos das seções, botões e marcadores.
+  Cantos de cima à esquerda e de baixo à direita arredondados; os outros dois, retos.
+*/
+@layer components {
+  .folha {
+    border-radius: 50% 0 50% 0 / 50% 0 50% 0;
+  }
+  .folha-suave {
+    border-radius: 22% 0 22% 0 / 22% 0 22% 0;
+  }
+
+  /* Marcador de lista: uma folha pequena, do tamanho da letra */
+  .marcador {
+    display: inline-block;
+    flex: none;
+    width: 0.7em;
+    height: 0.7em;
+    background: currentColor;
+    border-radius: 100% 0 100% 0;
+  }
+
+  /* Títulos de seção: uma família, um tamanho, no máximo duas linhas */
+  .titulo-secao {
+    font-family: var(--font-titulo);
+    font-weight: 700;
+    font-size: var(--text-titulo);
+    line-height: 1;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  /* Texto corrido: tinta cheia, 18px no celular e 20px no computador */
+  .texto-corrido {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+  @media (min-width: 768px) {
+    .texto-corrido {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* Botão: cantos de folha. No hover os cantos trocam de lado (movimento sutil). */
+  .botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.75rem;
+    font-family: var(--font-titulo);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    border-radius: 1.1rem 0 1.1rem 0;
+    transition:
+      border-radius 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.2s,
+      color 0.2s,
+      transform 0.2s;
+  }
+  .botao:hover {
+    border-radius: 0 1.1rem 0 1.1rem;
+  }
+  .botao:active {
+    transform: scale(0.97);
+  }
+  /* Anel de foco de duas cores (filete preto + anel branco): aparece em fundo claro e escuro */
+  .botao:focus-visible,
+  .anel-foco:focus-visible {
+    outline: 3px solid var(--color-branco);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--color-preto);
+  }
+
+  /* VIDRO ("liquid glass" em CSS): fundo translúcido + desfoque do que passa atrás */
+  .vidro {
+    background-color: rgb(20 20 20 / 0.8);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    backdrop-filter: blur(18px) saturate(1.5);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.18);
+  }
+}
+
+/*
+  ENTRADA DAS PARTES: cada título, texto e foto sobe 24px e aparece, uma vez.
+  Só esconde quando o JavaScript está ativo (classe "js" no <html>); sem JS tudo aparece.
+*/
+.js [data-revelar] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--atraso, 0ms),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--atraso, 0ms);
+}
+.js [data-revelar].visivel,
+.js-falhou [data-revelar] {
+  opacity: 1;
+  transform: none;
+}
+
+/* A folha da chamada principal entra girando de leve */
+@keyframes folha-entra {
+  from {
+    opacity: 0;
+    transform: translate(8%, 6%) rotate(-3deg) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.folha-entra {
+  animation: folha-entra 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-revelar] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .folha-entra {
+    animation: none;
+  }
+  .botao,
+  .botao:hover {
+    transition: none;
   }
 }

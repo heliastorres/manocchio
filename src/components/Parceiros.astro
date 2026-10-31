@@ -5,8 +5,19 @@ import Secao from './Secao.astro';
 const { parceiros } = conteudo;
 ---
 
-<Secao id={parceiros.id} titulo={parceiros.titulo} fundo="escuro" centralizado>
-  <div class="mx-auto max-w-3xl space-y-4 text-lg">
-    {parceiros.texto.map((p) => <p>{p}</p>)}
+<!-- Fundo preto: título à esquerda e texto à direita, a folha verde como marcador de cada parágrafo -->
+<Secao id={parceiros.id} fundo="preto">
+  <div class="grid gap-12 md:grid-cols-12 md:gap-16">
+    <h2 id="parceiros-titulo" data-revelar class="titulo-secao md:col-span-6">{parceiros.titulo}</h2>
+    <div class="space-y-6 md:col-span-6">
+      {
+        parceiros.texto.map((p) => (
+          <p data-revelar class="texto-corrido flex gap-5">
+            <span class="marcador mt-[0.55em] text-verde text-xl" aria-hidden="true"></span>
+            <span>{p}</span>
+          </p>
+        ))
+      }
+    </div>
   </div>
 </Secao>

@@ -5,20 +5,25 @@ import Botao from './Botao.astro';
 const { cabecalho, acessibilidade } = conteudo;
 ---
 
-<header class="fixed inset-x-0 top-0 z-50 bg-branco shadow-sm">
-  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 md:px-6">
-    <a href={cabecalho.logo.href} aria-label={cabecalho.logo.alt}>
-      <img src="/logos/logo-cor.png" alt="" width="150" height="141" class="h-12 w-auto" />
+<!--
+  Cabeçalho de vidro: no topo da página é transparente (sobre o fundo preto da chamada);
+  ao rolar, ganha fundo translúcido e desfoque, que vão aumentando com a rolagem.
+  Sem JavaScript ele já nasce em vidro (a classe "no-topo" só é colocada pelo script).
+-->
+<header id="cabecalho" class="cabecalho fixed inset-x-0 top-0 z-50 text-branco">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-8">
+    <a href={cabecalho.logo.href} aria-label={cabecalho.logo.alt} class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-branco">
+      <img src="/logos/logo-branca.png" alt="" width="150" height="141" class="h-12 w-auto" />
     </a>
 
     <nav aria-label={acessibilidade.menuPrincipal} class="hidden lg:block">
-      <ul class="flex items-center gap-6">
+      <ul class="flex items-center gap-8">
         {
           cabecalho.menu.map((item) => (
             <li>
               <a
                 href={item.href}
-                class="font-titulo text-base font-bold uppercase tracking-wide hover:text-verde-escuro"
+                class="font-titulo text-base font-bold uppercase tracking-wide transition-colors hover:text-verde focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-branco"
               >
                 {item.rotulo}
               </a>
@@ -39,7 +44,7 @@ const { cabecalho, acessibilidade } = conteudo;
         id="menu-botao"
         aria-expanded="false"
         aria-controls="menu-movel"
-        class="p-2 lg:hidden"
+        class="p-2 focus-visible:outline-2 focus-visible:outline-branco lg:hidden"
         data-abrir={acessibilidade.menuAbrir}
         data-fechar={acessibilidade.menuFechar}
         aria-label={acessibilidade.menuAbrir}
@@ -51,48 +56,91 @@ const { cabecalho, acessibilidade } = conteudo;
     </div>
   </div>
 
-  <nav id="menu-movel" aria-label={acessibilidade.menuPrincipal} hidden class="border-t border-cinza-300 bg-branco lg:hidden">
-    <ul class="mx-auto max-w-6xl px-4 py-2 md:px-6">
+  <nav id="menu-movel" aria-label={acessibilidade.menuPrincipal} hidden class="max-h-[calc(100dvh-4rem)] overflow-y-auto lg:hidden">
+    <ul class="mx-auto max-w-7xl px-4 pb-4 pt-2 md:px-8">
       {
         cabecalho.menu.map((item) => (
           <li>
-            <a href={item.href} class="block py-3 font-titulo text-lg font-bold uppercase tracking-wide">
+            <a href={item.href} class="block py-3 font-titulo text-2xl font-bold uppercase tracking-wide">
               {item.rotulo}
             </a>
           </li>
         ))
       }
-      <li class="py-3 sm:hidden">
+      <li class="pt-3 sm:hidden">
         <Botao href={cabecalho.botao.href} class="w-full">{cabecalho.botao.rotulo}</Botao>
       </li>
     </ul>
   </nav>
 </header>
 
+<style is:global>
+  /* No topo da página o cabeçalho some (fica transparente); ao rolar, o vidro aparece aos poucos.
+     --vidro vai de 0 a 1 conforme a rolagem (o script abaixo atualiza). */
+  .cabecalho {
+    --vidro: 1;
+    background-color: rgb(20 20 20 / calc(0.78 * var(--vidro)));
+    -webkit-backdrop-filter: blur(calc(18px * var(--vidro))) saturate(calc(1 + 0.5 * var(--vidro)));
+    backdrop-filter: blur(calc(18px * var(--vidro))) saturate(calc(1 + 0.5 * var(--vidro)));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / calc(0.18 * var(--vidro)));
+  }
+  /* Com o menu do celular aberto, o vidro fica sempre ligado */
+  .cabecalho.menu-aberto {
+    --vidro: 1 !important;
+  }
+</style>
+
 <script>
+  const cabecalho = document.getElementById('cabecalho');
   const botao = document.getElementById('menu-botao') as HTMLButtonElement | null;
   const menu = document.getElementById('menu-movel');
   const icone = document.getElementById('menu-icone');
 
-  if (botao && menu) {
-
-  function definir(aberto: boolean) {
-    botao.setAttribute('aria-expanded', String(aberto));
-    botao.setAttribute('aria-label', (aberto ? botao.dataset.fechar : botao.dataset.abrir) ?? '');
-    menu.hidden = !aberto;
-    icone?.setAttribute('d', aberto ? 'M6 6l12 12M18 6L6 18' : 'M3 6h18M3 12h18M3 18h18');
+  // Vidro que aumenta com a rolagem: 0 no topo, 1 depois de 160px
+  if (cabecalho) {
+    let esperando = false;
+    const atualizar = () => {
+      const v = Math.min(window.scrollY / 160, 1);
+      cabecalho.style.setProperty('--vidro', v.toFixed(2));
+      esperando = false;
+    };
+    atualizar();
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!esperando) {
+          esperando = true;
+          requestAnimationFrame(atualizar);
+        }
+      },
+      { passive: true },
+    );
   }
 
-  botao.addEventListener('click', () => definir(botao.getAttribute('aria-expanded') !== 'true'));
-  // Clicar num item do menu fecha o menu; Esc também.
-  menu.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('a')) definir(false);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !menu.hidden) {
-      definir(false);
-      botao.focus();
-    }
-  });
+  if (botao && menu) {
+    const definir = (aberto: boolean) => {
+      botao.setAttribute('aria-expanded', String(aberto));
+      botao.setAttribute('aria-label', (aberto ? botao.dataset.fechar : botao.dataset.abrir) ?? '');
+      menu.hidden = !aberto;
+      cabecalho?.classList.toggle('menu-aberto', aberto);
+      icone?.setAttribute('d', aberto ? 'M6 6l12 12M18 6L6 18' : 'M3 6h18M3 12h18M3 18h18');
+    };
+
+    // Se a janela crescer até o tamanho do menu de computador, fecha o menu do celular
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => {
+      if (e.matches) definir(false);
+    });
+
+    botao.addEventListener('click', () => definir(botao.getAttribute('aria-expanded') !== 'true'));
+    // Clicar num item do menu fecha o menu; Esc também.
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) definir(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) {
+        definir(false);
+        botao.focus();
+      }
+    });
   }
 </script>

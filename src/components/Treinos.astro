@@ -1,21 +1,72 @@
 ---
 import { conteudo } from '../data/conteudo';
 import Secao from './Secao.astro';
-import Botao from './Botao.astro';
 
 const { treinos } = conteudo;
 ---
 
-<Secao id={treinos.id} titulo={treinos.titulo} fundo="escuro" centralizado>
-  {treinos.texto.map((p) => <p class="mx-auto max-w-3xl text-lg">{p}</p>)}
-  <h3 class="mt-10 font-titulo text-xl font-bold uppercase tracking-wide text-verde">{treinos.rotuloModalidades}</h3>
-  <ul class="mt-4 flex flex-wrap justify-center gap-4">
-    {
-      treinos.modalidades.map((m) => (
-        <li>
-          <Botao href={m.href}>{m.rotulo}</Botao>
-        </li>
-      ))
-    }
-  </ul>
+<!-- Campo verde: título e texto à esquerda; as modalidades são linhas grandes à direita -->
+<Secao id={treinos.id} fundo="verde">
+  <div class="grid gap-12 md:grid-cols-12 md:gap-16">
+    <div class="md:col-span-6">
+      <h2 id="treinos-titulo" data-revelar class="titulo-secao">{treinos.titulo}</h2>
+      <div class="mt-8 max-w-xl space-y-5">
+        {treinos.texto.map((p) => <p data-revelar class="texto-corrido">{p}</p>)}
+      </div>
+    </div>
+    <div class="md:col-span-6 md:pt-4">
+      <h3 data-revelar class="font-titulo text-xl font-bold uppercase tracking-wide">{treinos.rotuloModalidades}</h3>
+      <ul class="lista-modalidades mt-4">
+        {
+          treinos.modalidades.map((m) => (
+            <li data-revelar>
+              <a
+                href={m.href}
+                target={m.href.startsWith('http') ? '_blank' : undefined}
+                rel={m.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                class="group flex items-center justify-between gap-4 py-3 font-titulo text-linha font-bold uppercase leading-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-preto"
+              >
+                <span class="flex items-center gap-4">
+                  <span class="marcador transition-transform duration-300 group-hover:rotate-90"></span>
+                  {m.rotulo}
+                </span>
+                <svg
+                  class="h-[0.7em] w-[0.7em] flex-none transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  aria-hidden="true"
+                >
+                  <path d="M6 18 18 6M8 6h10v10"></path>
+                </svg>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
 </Secao>
+
+<style is:global>
+  /* Ao apontar para uma modalidade, as outras esmaecem (a atual fica firme) */
+  /* O esmaecimento é no link (filho), porque o <li> já tem a transição da entrada ao rolar */
+  .lista-modalidades li > a {
+    transition: opacity 0.25s;
+  }
+  .lista-modalidades:focus-within li:not(:focus-within) > a {
+    opacity: 0.45;
+  }
+  @media (hover: hover) {
+    .lista-modalidades:hover li:not(:hover) > a {
+      opacity: 0.45;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lista-modalidades li > a,
+    .lista-modalidades li > a * {
+      transition: none !important;
+    }
+  }
+</style>

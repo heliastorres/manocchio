@@ -5,8 +5,21 @@ import Secao from './Secao.astro';
 const { anamnese } = conteudo;
 ---
 
-<Secao id={anamnese.id} titulo={anamnese.titulo}>
-  <div class="max-w-3xl space-y-4 text-lg text-cinza-700">
-    {anamnese.texto.map((p) => <p>{p}</p>)}
+<!-- Fundo preto: título à esquerda (fixo enquanto o texto rola), parágrafos com marcador de folha à direita -->
+<Secao id={anamnese.id} fundo="preto">
+  <div class="grid gap-12 md:grid-cols-12 md:gap-16">
+    <div class="md:col-span-6">
+      <h2 id="anamnese-titulo" data-revelar class="titulo-secao md:sticky md:top-28">{anamnese.titulo}</h2>
+    </div>
+    <div class="space-y-8 md:col-span-6">
+      {
+        anamnese.texto.map((p) => (
+          <div data-revelar class="flex gap-5">
+            <span class="marcador mt-[0.55em] text-verde text-xl" aria-hidden="true"></span>
+            <p class="texto-corrido">{p}</p>
+          </div>
+        ))
+      }
+    </div>
   </div>
 </Secao>
