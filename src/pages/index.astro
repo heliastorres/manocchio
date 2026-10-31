@@ -1,17 +1,36 @@
 ---
-import '../styles/global.css';
+import Base from '../layouts/Base.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import Chamada from '../components/Chamada.astro';
+import Apresentacao from '../components/Apresentacao.astro';
+import Treinos from '../components/Treinos.astro';
+import Planos from '../components/Planos.astro';
+import Anamnese from '../components/Anamnese.astro';
+import Comunicacao from '../components/Comunicacao.astro';
+import Resultados from '../components/Resultados.astro';
+import Inscricao from '../components/Inscricao.astro';
+import Parceiros from '../components/Parceiros.astro';
+import Locais from '../components/Locais.astro';
+import Rodape from '../components/Rodape.astro';
+import WhatsappFlutuante from '../components/WhatsappFlutuante.astro';
+import BannerCookies from '../components/BannerCookies.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base>
+  <Cabecalho />
+  <main id="conteudo">
+    <Chamada />
+    <Apresentacao />
+    <Treinos />
+    <Planos />
+    <Anamnese />
+    <Comunicacao />
+    <Resultados />
+    <Inscricao />
+    <Parceiros />
+    <Locais />
+  </main>
+  <Rodape />
+  <WhatsappFlutuante />
+  <BannerCookies />
+</Base>
