@@ -62,9 +62,15 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - Tratamento leve: corte do asfalto vazio na foto da equipe e ajuste suave de contraste e cor, sem mudar o aspecto das fotos.
   - **Descartadas:** o banner de parcerias (foto de banco de imagens, com escurecimento já embutido) e o gráfico da pista UPX (material de divulgação com texto).
 - **Problemas (etapa 3):** a foto do Guilherme tem só 418 px de largura. Não foi ampliada, para não borrar, então só serve em tamanho pequeno. Se for usada grande, precisa de uma foto melhor. Os locais de treino da seção 11 só têm foto de duas piscinas (Nado Livre e Três Marias); falta foto do UPX Sports.
-- **Estado atual:** etapas 1, 2 e 3 prontas. Verificado por build e por prévia visual das imagens tratadas.
+- **Revisão de código da etapa 3 (feita por um revisor independente):** nenhum problema crítico. Achados tratados:
+  - Bug no script: fotos giradas pela câmera (marca de orientação) teriam largura e altura trocadas no recorte. Provado com um teste e corrigido. A primeira correção recodificava o JPEG duas vezes (piorava a qualidade); a versão final usa um passo intermediário sem perda, e as 6 imagens saem idênticas às anteriores.
+  - Script agora avisa quando a pasta ou uma foto não existe, trata cada foto separadamente e termina com erro se alguma falhar. Atalho: `npm run imagens -- <pasta-dos-originais> <pasta-de-saida>`.
+  - `sharp` como dependência de desenvolvimento: testei um build só com dependências de produção e funcionou (17 imagens geradas). Mantido, mas conferir de novo na etapa 9 (publicação).
+  - Anotado para a etapa 5: na home de verdade, `widths` e `sizes` das imagens precisam ser definidos por seção (a foto da chamada principal ocupa a tela toda e precisa de larguras maiores que as da página de teste).
+- **Estado atual:** etapas 1, 2 e 3 prontas e revisadas. Verificado por build, por prévia visual das imagens e por revisão de código.
 - **Próximos passos:**
   - Etapa 4 do `PLANO.md`: conteúdo (textos e links em arquivo de dados).
+  - A partir da etapa 3 o fluxo é: `executing-plans`, `verification-before-completion` e `requesting-code-review` antes de cada PR (registrado no `CLAUDE.md`).
   - Pedir ao cliente (ou conferir) fotos melhores: Guilherme, UPX Sports e logos em alta resolução.
   - Apagar `src/pages/teste-identidade.astro` antes da entrega (é só uma página temporária).
   - Atualizar o `README.md` (ainda é o texto padrão do Astro).
