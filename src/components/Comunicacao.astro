@@ -5,8 +5,10 @@ import Secao from './Secao.astro';
 const { comunicacao } = conteudo;
 ---
 
-<Secao id={comunicacao.id} titulo={comunicacao.titulo} fundo="cinza">
-  <div class="max-w-3xl space-y-4 text-lg text-cinza-700">
-    {comunicacao.texto.map((p) => <p>{p}</p>)}
+<!-- Título em largura total e os dois parágrafos lado a lado -->
+<Secao id={comunicacao.id} fundo="branco">
+  <h2 id="comunicacao-titulo" data-revelar class="titulo-secao">{comunicacao.titulo}</h2>
+  <div class="mt-12 grid gap-8 md:mt-16 md:grid-cols-2 md:gap-16">
+    {comunicacao.texto.map((p) => <p data-revelar class="texto-corrido">{p}</p>)}
   </div>
 </Secao>

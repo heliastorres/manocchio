@@ -126,7 +126,6 @@ export const conteudo = {
   // 2. Apresentação
   apresentacao: {
     id: 'apresentacao',
-    chamadaCurta: 'Sobre a assessoria',
     titulo: 'Esporte que transforma a rotina',
     texto: [
       'São muitos anos de natação, pedal e corrida, sempre com o mesmo propósito: levar o valor transformador do esporte para o dia a dia de atletas amadores.',
@@ -141,7 +140,7 @@ export const conteudo = {
   // 3. Treinos online (RF3: um botão por modalidade)
   treinos: {
     id: 'treinos',
-    titulo: 'Seus treinos de forma prática, simples e eficaz',
+    titulo: 'Treinos práticos, simples e eficaz',
     texto: [
       'Escolha a modalidade, preencha a ficha de inscrição e finalize o pagamento por boleto ou cartão. Deixe que a gente ajude você a executar o seu planejamento esportivo com profissionalismo e seriedade.',
     ],
@@ -188,7 +187,7 @@ export const conteudo = {
   // 5. Anamnese
   anamnese: {
     id: 'anamnese',
-    titulo: 'Anamnese: o primeiro contato com o treinador',
+    titulo: 'Anamnese: primeiro contato',
     texto: [
       'Ao entrar na equipe, o atleta preenche uma ficha de anamnese. Analisamos os dados e escolhemos o treinador mais adequado ao seu perfil. Se você já conhece nossos treinadores, pode indicar a sua preferência.',
       'A anamnese é o primeiro contato entre atleta e treinador. Ele analisa uma série de fatores e, se precisar, fala com você para tirar dúvidas antes de enviar os primeiros treinos.',

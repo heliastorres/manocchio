@@ -20,3 +20,6 @@ npm-debug.log*
 .DS_Store
 .idea/
 .env.production
+
+# Capturas e relatórios da skill de design (gerados, pesados)
+.taste-skill/

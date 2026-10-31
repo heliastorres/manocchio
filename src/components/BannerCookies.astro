@@ -1,5 +1,6 @@
 ---
 // Banner de cookies só visual (RF6): o botão apenas fecha o aviso, não grava nada.
+// Vidro: fundo translúcido com desfoque. O padding da direita deixa espaço para o botão do WhatsApp.
 import { conteudo } from '../data/conteudo';
 
 const { cookies } = conteudo;
@@ -8,19 +9,19 @@ const { cookies } = conteudo;
 <aside
   id="banner-cookies"
   aria-label={cookies.rotuloAcessibilidade}
-  class="fixed inset-x-0 bottom-0 z-50 bg-preto text-branco shadow-[0_-4px_12px_rgba(0,0,0,0.3)]"
+  class="vidro fixed inset-x-0 bottom-0 z-50 text-branco"
 >
-  <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 pr-20 md:flex-row md:items-center md:px-6">
-    <div class="flex-1 text-sm">
+  <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 pr-24 md:flex-row md:items-center md:px-8 md:pr-28">
+    <div class="flex-1 text-base">
       {cookies.texto.map((p) => <p>{p}</p>)}
-      <a href={cookies.politica.href} target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-verde">
+      <a href={cookies.politica.href} target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-verde focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-branco">
         {cookies.politica.rotulo}
       </a>
     </div>
     <button
       type="button"
       id="banner-cookies-botao"
-      class="bg-verde px-6 py-2 font-titulo text-lg font-bold uppercase tracking-wide text-preto hover:bg-verde-escuro hover:text-branco focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-branco"
+      class="botao bg-verde !py-2 text-preto hover:bg-branco"
     >
       {cookies.botao}
     </button>

@@ -15,8 +15,12 @@ const { site, acessibilidade } = conteudo;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <title>{site.titulo}</title>
+    <!-- Marca que o JavaScript está ativo: só então as partes da página começam escondidas e entram ao rolar -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
   </head>
-  <body class="bg-branco font-texto text-preto antialiased">
+  <body class="bg-preto font-texto text-preto antialiased">
     <a
       href="#conteudo"
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-preto focus:px-4 focus:py-2 focus:text-branco"
@@ -26,6 +30,56 @@ const { site, acessibilidade } = conteudo;
     <slot />
   </body>
 </html>
+
+<script>
+  // ENTRADA DAS PARTES: cada elemento com data-revelar aparece uma vez, ao entrar na tela,
+  // com um pequeno atraso por posição dentro da seção (título, texto, foto, um depois do outro).
+  const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const itens = Array.from(document.querySelectorAll<HTMLElement>('[data-revelar]'));
+
+  if (reduzir || !('IntersectionObserver' in window)) {
+    itens.forEach((el) => el.classList.add('visivel'));
+  } else {
+    const contagem = new Map<Element, number>();
+    itens.forEach((el) => {
+      const secao = el.closest('section') ?? document.body;
+      const n = contagem.get(secao) ?? 0;
+      contagem.set(secao, n + 1);
+      el.style.setProperty('--atraso', `${Math.min(n, 5) * 80}ms`);
+    });
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        entradas.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visivel');
+            observador.unobserve(e.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+    );
+    itens.forEach((el) => observador.observe(el));
+  }
+
+  // A foto da chamada principal desliza devagar quando a página rola (paralaxe leve).
+  const deslizante = document.querySelector<HTMLElement>('[data-paralaxe]');
+  if (deslizante && !reduzir) {
+    let esperando = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (esperando) return;
+        esperando = true;
+        requestAnimationFrame(() => {
+          const y = Math.min(window.scrollY, 900);
+          deslizante.style.transform = `translateY(${y * 0.12}px)`;
+          esperando = false;
+        });
+      },
+      { passive: true },
+    );
+  }
+</script>
 
 <style is:global>
   /* Âncoras do menu não ficam escondidas atrás do cabeçalho fixo */

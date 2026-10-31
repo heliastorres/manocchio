@@ -6,38 +6,100 @@ import Foto from './Foto.astro';
 const { locais } = conteudo;
 ---
 
-<Secao id={locais.id} titulo={locais.titulo}>
-  <ul class="mt-4 grid gap-6 md:grid-cols-3">
-    {
-      locais.itens.map((local) => (
-        <li class="flex flex-col border border-cinza-300 bg-branco">
-          {local.imagem ? (
-            <Foto
-              imagem={local.imagem}
-              widths={[400, 640, 900]}
-              sizes="(min-width: 1152px) 370px, (min-width: 768px) 30vw, 100vw"
-              class="aspect-[4/3] w-full object-cover"
-            />
-          ) : (
-            // Sem foto (UPX Sports): bloco verde decorativo no lugar
-            <div class="flex aspect-[4/3] w-full items-center justify-center bg-preto p-4 text-center font-titulo text-2xl font-bold uppercase text-verde" aria-hidden="true">
-              {local.nome}
+<!--
+  Locais de treino: movimento de assinatura da página ("índice com prévia").
+  No computador, as linhas são o menu e a foto muda numa moldura única ao apontar ou focar uma linha.
+  No celular (sem mouse), cada linha mostra a própria foto.
+-->
+<Secao id={locais.id} fundo="branco">
+  <h2 id="locais-titulo" data-revelar class="titulo-secao">{locais.titulo}</h2>
+
+  <div class="mt-12 grid gap-10 md:mt-16 md:grid-cols-12 md:gap-16">
+    <ul id="locais-lista" class="md:col-span-7">
+      {
+        locais.itens.map((local, i) => (
+          <li data-revelar data-local={i} class="locais-linha py-6 first:pt-0 md:py-8">
+            <div class="md:hidden">
+              {local.imagem ? (
+                <Foto
+                  imagem={local.imagem}
+                  widths={[400, 640, 900]}
+                  sizes="100vw"
+                  class="folha-suave mb-5 aspect-[4/3] w-full object-cover"
+                />
+              ) : (
+                <div class="folha-suave mb-5 flex aspect-[4/3] w-full items-center justify-center bg-verde p-4 text-center font-titulo text-3xl font-bold uppercase text-preto" aria-hidden="true">
+                  {local.nome}
+                </div>
+              )}
             </div>
-          )}
-          <div class="flex flex-1 flex-col p-6">
-            <h3 class="font-titulo text-xl font-bold uppercase">{local.nome}</h3>
-            <p class="text-cinza-700">{local.complemento}</p>
+            <h3 class="locais-nome flex items-center gap-4 font-titulo text-linha font-bold uppercase leading-none transition-opacity duration-200">
+              <span class="marcador text-verde-escuro"></span>
+              {local.nome}
+            </h3>
+            <p class="texto-corrido mt-2 pl-[calc(0.7em+1rem)]">{local.complemento}</p>
             <a
               href={local.href}
               target="_blank"
               rel="noopener noreferrer"
-              class="mt-4 font-bold text-verde-escuro underline underline-offset-4 hover:text-preto"
+              class="mt-3 inline-block pl-[calc(0.7em+1rem)] text-lg font-bold text-verde-escuro underline underline-offset-4 hover:text-preto focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde-escuro"
             >
               {locais.textoLink}<span class="sr-only"> ({local.nome})</span>
             </a>
-          </div>
-        </li>
-      ))
-    }
-  </ul>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="hidden md:col-span-5 md:block" data-revelar>
+      <div class="sticky top-28">
+        <div class="folha relative aspect-[4/5] w-full overflow-hidden bg-preto" aria-hidden="true">
+          {
+            locais.itens.map((local, i) => (
+              <div data-previa={i} class:list={['absolute inset-0 transition-opacity duration-[240ms]', i === 0 ? 'z-10 opacity-100' : 'opacity-0']}>
+                {local.imagem ? (
+                  <Foto
+                    imagem={local.imagem}
+                    widths={[480, 720, 900]}
+                    sizes="(min-width: 1280px) 480px, 40vw"
+                    class="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div class="flex h-full w-full items-center justify-center bg-verde p-8 text-center font-titulo text-3xl font-bold uppercase text-preto">
+                    {local.nome}
+                  </div>
+                )}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
 </Secao>
+
+<style is:global>
+  /* Ao apontar para a lista, os outros nomes esmaecem (nomes são texto grande, contraste continua ok) */
+  @media (hover: hover) {
+    #locais-lista:hover .locais-linha:not(:hover) .locais-nome {
+      opacity: 0.5;
+    }
+  }
+</style>
+
+<script>
+  // Mostra no quadro a foto do local apontado ou focado (troca suave de 240 ms).
+  const linhas = document.querySelectorAll<HTMLElement>('.locais-linha');
+  const previas = document.querySelectorAll<HTMLElement>('[data-previa]');
+  const mostrar = (i: string | undefined) => {
+    previas.forEach((el) => {
+      const ativa = el.dataset.previa === i;
+      el.style.opacity = ativa ? '1' : '0';
+      el.style.zIndex = ativa ? '10' : '0';
+    });
+  };
+  linhas.forEach((linha) => {
+    linha.addEventListener('mouseenter', () => mostrar(linha.dataset.local));
+    linha.addEventListener('focusin', () => mostrar(linha.dataset.local));
+  });
+</script>
