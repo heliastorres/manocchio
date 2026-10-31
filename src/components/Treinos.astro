@@ -1,0 +1,21 @@
+---
+import { conteudo } from '../data/conteudo';
+import Secao from './Secao.astro';
+import Botao from './Botao.astro';
+
+const { treinos } = conteudo;
+---
+
+<Secao id={treinos.id} titulo={treinos.titulo} fundo="escuro" centralizado>
+  {treinos.texto.map((p) => <p class="mx-auto max-w-3xl text-lg">{p}</p>)}
+  <h3 class="mt-10 font-titulo text-xl font-bold uppercase tracking-wide text-verde">{treinos.rotuloModalidades}</h3>
+  <ul class="mt-4 flex flex-wrap justify-center gap-4">
+    {
+      treinos.modalidades.map((m) => (
+        <li>
+          <Botao href={m.href}>{m.rotulo}</Botao>
+        </li>
+      ))
+    }
+  </ul>
+</Secao>

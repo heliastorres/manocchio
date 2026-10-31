@@ -1,0 +1,31 @@
+---
+import { conteudo } from '../data/conteudo';
+import Botao from './Botao.astro';
+import Foto from './Foto.astro';
+
+const { inscricao } = conteudo;
+---
+
+<section id={inscricao.id} aria-labelledby="inscricao-titulo" class="bg-cinza-100">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 md:grid-cols-[1fr_2fr] md:gap-14 md:px-6 md:py-24">
+    <Foto
+      imagem={inscricao.imagem}
+      widths={[240, 418]}
+      sizes="(min-width: 768px) 300px, 240px"
+      class="h-auto w-60 max-w-full self-start object-cover md:w-full"
+    />
+    <div>
+      <h2 id="inscricao-titulo" class="font-titulo text-3xl font-bold uppercase leading-tight md:text-4xl">
+        {inscricao.titulo}
+      </h2>
+      <div class="mt-6 space-y-4 text-lg text-cinza-700">
+        {inscricao.texto.map((p) => <p>{p}</p>)}
+      </div>
+      <h3 class="mt-8 font-titulo text-xl font-bold uppercase tracking-wide">{inscricao.passosTitulo}</h3>
+      <ol class="mt-4 list-decimal space-y-3 pl-6 text-cinza-700 marker:font-bold marker:text-verde-escuro">
+        {inscricao.passos.map((passo) => <li>{passo}</li>)}
+      </ol>
+      <Botao href={inscricao.botao.href} class="mt-8">{inscricao.botao.rotulo}</Botao>
+    </div>
+  </div>
+</section>

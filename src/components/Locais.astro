@@ -1,0 +1,43 @@
+---
+import { conteudo } from '../data/conteudo';
+import Secao from './Secao.astro';
+import Foto from './Foto.astro';
+
+const { locais } = conteudo;
+---
+
+<Secao id={locais.id} titulo={locais.titulo}>
+  <ul class="mt-4 grid gap-6 md:grid-cols-3">
+    {
+      locais.itens.map((local) => (
+        <li class="flex flex-col border border-cinza-300 bg-branco">
+          {local.imagem ? (
+            <Foto
+              imagem={local.imagem}
+              widths={[400, 640, 900]}
+              sizes="(min-width: 1152px) 370px, (min-width: 768px) 30vw, 100vw"
+              class="aspect-[4/3] w-full object-cover"
+            />
+          ) : (
+            // Sem foto (UPX Sports): bloco verde decorativo no lugar
+            <div class="flex aspect-[4/3] w-full items-center justify-center bg-preto p-4 text-center font-titulo text-2xl font-bold uppercase text-verde" aria-hidden="true">
+              {local.nome}
+            </div>
+          )}
+          <div class="flex flex-1 flex-col p-6">
+            <h3 class="font-titulo text-xl font-bold uppercase">{local.nome}</h3>
+            <p class="text-cinza-700">{local.complemento}</p>
+            <a
+              href={local.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-4 font-bold text-verde-escuro underline underline-offset-4 hover:text-preto"
+            >
+              {locais.textoLink}<span class="sr-only"> ({local.nome})</span>
+            </a>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Secao>
