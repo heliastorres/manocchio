@@ -1,5 +1,21 @@
 ---
 import '../styles/global.css';
+import { Image } from 'astro:assets';
+import equipe from '../assets/fotos/equipe-ciclismo.webp';
+import atleta from '../assets/fotos/atleta-capacete-verde.webp';
+import piscinaNadoLivre from '../assets/fotos/piscina-nado-livre.webp';
+import piscinaTresMarias from '../assets/fotos/piscina-tres-marias.webp';
+import treinoNatacao from '../assets/fotos/treino-natacao.webp';
+import guilherme from '../assets/fotos/guilherme-manocchio.webp';
+
+const fotos = [
+  { src: equipe, alt: 'Equipe Manocchio de ciclismo de braços erguidos na estrada' },
+  { src: atleta, alt: 'Atleta de capacete verde pedalando em posição aerodinâmica' },
+  { src: piscinaNadoLivre, alt: 'Atletas nadando na piscina do Nado Livre' },
+  { src: piscinaTresMarias, alt: 'Piscina coberta com atletas treinando' },
+  { src: treinoNatacao, alt: 'Duas nadadoras treinando com prancha' },
+  { src: guilherme, alt: 'Guilherme Manocchio sorrindo com os braços abertos' },
+];
 
 const cores = [
   { nome: 'verde', hex: '#80b522', classe: 'bg-verde', texto: 'text-preto' },
@@ -36,6 +52,15 @@ const cores = [
     <h2 class="font-titulo text-2xl font-bold mb-3">Fontes</h2>
     <p class="font-titulo text-3xl font-bold mb-2">Roboto Condensed: títulos (font-titulo)</p>
     <p class="font-texto text-lg mb-10">Roboto: textos corridos (font-texto). Treinamento de triathlon, corrida, natação e ciclismo em Curitiba.</p>
+
+    <h2 class="font-titulo text-2xl font-bold mb-3">Imagens tratadas (etapa 3)</h2>
+    <ul class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-10">
+      {fotos.map((f) => (
+        <li>
+          <Image src={f.src} alt={f.alt} widths={[320, 640]} sizes="(min-width: 640px) 33vw, 50vw" class="w-full h-48 object-cover rounded" />
+        </li>
+      ))}
+    </ul>
 
     <h2 class="font-titulo text-2xl font-bold mb-3">Logos</h2>
     <div class="flex flex-wrap gap-4">
