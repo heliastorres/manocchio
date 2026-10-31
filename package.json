@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "imagens": "node scripts/tratar-imagens.mjs"
   },
   "dependencies": {
     "@fontsource-variable/roboto": "^5.3.0",

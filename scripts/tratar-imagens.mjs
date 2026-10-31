@@ -78,34 +78,63 @@ const fotos = [
   },
 ];
 
+try {
+  if (!(await stat(entrada)).isDirectory()) throw new Error('não é uma pasta');
+} catch {
+  console.error(`Pasta de originais não encontrada: ${entrada}`);
+  process.exit(1);
+}
+
 await mkdir(saida, { recursive: true });
+
+const falhas = [];
 
 for (const f of fotos) {
   const origem = join(entrada, f.original);
   const destino = join(saida, `${f.nome}.webp`);
 
-  let img = sharp(origem).rotate(); // respeita a orientação gravada pela câmera
-  const { width, height } = await img.metadata();
+  try {
 
-  if (f.recorte) {
-    img = img.extract({
-      left: 0,
-      top: Math.round(height * f.recorte.topo),
-      width,
-      height: Math.round(height * f.recorte.altura),
-    });
+    // Aplica a orientação gravada pela câmera ANTES de medir e recortar. Sem isso,
+    // fotos tiradas "em pé" teriam largura e altura trocadas no cálculo do recorte.
+    // O formato intermediário é PNG (sem perda): sem isso, o sharp recodificaria
+    // o JPEG original e a foto passaria por compressão com perda duas vezes.
+    const girada = await sharp(origem).rotate().png({ compressionLevel: 1 }).toBuffer();
+    let img = sharp(girada);
+    const { width, height } = await img.metadata();
+
+    if (f.recorte) {
+      if (f.recorte.topo + f.recorte.altura > 1) {
+        throw new Error(`recorte passa do limite da imagem (topo + altura > 1)`);
+      }
+      img = img.extract({
+        left: 0,
+        top: Math.round(height * f.recorte.topo),
+        width,
+        height: Math.round(height * f.recorte.altura),
+      });
+    }
+
+    await img
+      .resize({ width: f.largura, withoutEnlargement: true }) // nunca amplia
+      .modulate({ brightness: f.brilho, saturation: f.saturacao })
+      .linear(f.contraste, -(128 * (f.contraste - 1))) // contraste em torno do cinza médio
+      .sharpen({ sigma: 0.6 })
+      .webp({ quality: f.qualidade ?? 80, effort: 5 })
+      .toFile(destino);
+
+    const kb = Math.round((await stat(destino)).size / 1024);
+    const antes = Math.round((await stat(origem)).size / 1024);
+    const meta = await sharp(destino).metadata();
+    console.log(`${f.nome}.webp  ${meta.width}x${meta.height}  ${antes} KB -> ${kb} KB`);
+  } catch (erro) {
+    // Uma foto com problema não impede as outras de serem tratadas.
+    console.error(`FALHOU ${f.original}: ${erro.message}`);
+    falhas.push(f.original);
   }
+}
 
-  await img
-    .resize({ width: Math.min(f.largura, width), withoutEnlargement: true })
-    .modulate({ brightness: f.brilho, saturation: f.saturacao })
-    .linear(f.contraste, -(128 * (f.contraste - 1))) // contraste em torno do cinza médio
-    .sharpen({ sigma: 0.6 })
-    .webp({ quality: f.qualidade ?? 80, effort: 5 })
-    .toFile(destino);
-
-  const kb = Math.round((await stat(destino)).size / 1024);
-  const antes = Math.round((await stat(origem)).size / 1024);
-  const meta = await sharp(destino).metadata();
-  console.log(`${f.nome}.webp  ${meta.width}x${meta.height}  ${antes} KB -> ${kb} KB`);
+if (falhas.length > 0) {
+  console.error(`\n${falhas.length} foto(s) com erro. Confira se estão em ${entrada}.`);
+  process.exit(1);
 }
