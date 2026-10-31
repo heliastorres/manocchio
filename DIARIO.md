@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 (base Astro + Tailwind), 2 (identidade visual) e 3 (imagens) concluídas; próxima é a etapa 4 (conteúdo).
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 (base Astro + Tailwind), 2 (identidade visual), 3 (imagens) e 4 (conteúdo) concluídas; próxima é a etapa 5 (componentes).
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção.
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -67,9 +67,20 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - Script agora avisa quando a pasta ou uma foto não existe, trata cada foto separadamente e termina com erro se alguma falhar. Atalho: `npm run imagens -- <pasta-dos-originais> <pasta-de-saida>`.
   - `sharp` como dependência de desenvolvimento: testei um build só com dependências de produção e funcionou (17 imagens geradas). Mantido, mas conferir de novo na etapa 9 (publicação).
   - Anotado para a etapa 5: na home de verdade, `widths` e `sizes` das imagens precisam ser definidos por seção (a foto da chamada principal ocupa a tela toda e precisa de larguras maiores que as da página de teste).
-- **Estado atual:** etapas 1, 2 e 3 prontas e revisadas. Verificado por build, por prévia visual das imagens e por revisão de código.
+- **Etapa 4 (conteúdo):** todos os textos, links e nomes de fotos da home estão em um único arquivo, `src/data/conteudo.ts`. Os componentes da etapa 5 só vão ler esses dados. Os textos mantêm as ideias do site atual, com redação corrigida e mais clara (e sem erros de digitação do original). Não inventei preços, números nem promessas. Página temporária `/teste-conteudo` mostra tudo, para você revisar os textos no navegador.
+- **Verificação (etapa 4):** o script `npm run verificar:conteudo` confere que não há texto vazio, nem texto-modelo do tema antigo, que todo link é válido, que toda âncora do menu aponta para uma seção e que toda foto citada existe. Testei o script com 8 defeitos propositais e ele pegou todos (isso também revelou um bug do próprio script, já corrigido). Testei também os 11 links externos: todos respondem. O `bit.ly/MTTNAT23` devolve 403 para robôs, mas com navegador redireciona para o sistema de inscrição.
+- **Decisões (etapa 4):**
+  - O telefone e o e-mail do cabeçalho do site atual (`+12 34 56 78`, `email@example.com`) são texto-modelo do tema WordPress, não dados reais: ignorados. Os dados reais vêm do rodapé.
+  - O botão de WhatsApp usa `wa.me` (funciona no celular e no computador, ao contrário do `web.whatsapp.com` do site atual, que só funciona no computador), com a mensagem pronta do site atual.
+  - Links para páginas fora do protótipo (modalidades, locais, política de privacidade) apontam para o site atual. Quando o site novo estiver completo, basta trocar em `conteudo.ts`.
+  - Os planos Básico e Prime só têm a descrição do site atual. Os valores ficam nas páginas de inscrição de cada modalidade, então os botões de plano levam à seção de treinos.
+  - Descartei o bloco "Treinamento presencial" (Triathlon/Corrida/Natação) da home atual: não está nas 12 seções do escopo, e os locais de treino já cobrem o assunto.
+  - O menu tem 7 itens por âncora: Sobre, Treinos, Planos, Como funciona, Resultados, Locais e Contato.
+- **Estado atual:** etapas 1 a 4 prontas. Etapa 4 verificada por build, pelo verificador de conteúdo e pelo teste dos links.
 - **Próximos passos:**
-  - Etapa 4 do `PLANO.md`: conteúdo (textos e links em arquivo de dados).
+  - Revisar os textos em `/teste-conteudo` (`npm run dev`) e pedir mudanças se quiser.
+  - Etapa 5 do `PLANO.md`: componentes e seções, lendo os dados de `src/data/conteudo.ts`.
+  - Apagar `src/pages/teste-conteudo.astro` antes da entrega (também é temporária).
   - A partir da etapa 3 o fluxo é: `executing-plans`, `verification-before-completion` e `requesting-code-review` antes de cada PR (registrado no `CLAUDE.md`).
   - Pedir ao cliente (ou conferir) fotos melhores: Guilherme, UPX Sports e logos em alta resolução.
   - Apagar `src/pages/teste-identidade.astro` antes da entrega (é só uma página temporária).
