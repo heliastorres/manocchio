@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Aguardando início da etapa 1 (sem código ainda).
+- **Fase atual:** escopo, requisitos e plano prontos. Etapa 1 (base Astro + Tailwind) concluída; próxima é a etapa 2.
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção.
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -45,9 +45,12 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - O envio por SSH falhou com `Permission denied (publickey)`, porque não há chave SSH configurada nesta máquina. Resolvido trocando a conexão para HTTPS (`gh auth setup-git`), que usa o login do `gh`.
 - **Visão geral e escopo do protótipo:** definidos e registrados na seção "Visão geral do projeto" acima.
 - **Requisitos e plano:** requisitos funcionais (RF1 a RF6) e não funcionais (RNF1 a RNF6) foram discutidos e aprovados. O plano de execução com 9 etapas está em `PLANO.md`, ainda sem commit.
-- **Estado atual:** nenhuma linha de código criada. Aguardando a autorização para iniciar a etapa 1.
+- **Etapa 1 (base do projeto):** projeto Astro criado na raiz, com TypeScript estrito e Tailwind 4 (via `astro add tailwind`). Nome do pacote: `manocchio`. A página inicial importa o CSS do Tailwind. Testado: `npm run dev` responde HTTP 200 e `npm run build` passa.
+- **Branch:** trabalho feito em `feature/etapa-1-base-astro`, com PR para a `main`.
+- **Problemas:** o instalador do Astro criou a pasta `extinct-equinox/` em vez de usar a raiz. Resolvido movendo os arquivos para a raiz e apagando a pasta (que tinha um repositório git próprio, criado pelo instalador, sem nada importante). O `.gitignore` foi unificado.
+- **Estado atual:** `PLANO.md` commitado (commit `29e042c`). Etapa 1 em revisão.
 - **Próximos passos:**
-  - Quando o usuário autorizar: começar a etapa 1 do `PLANO.md` (base Astro + Tailwind).
-  - Commitar o `PLANO.md` (ainda não commitado).
+  - Etapa 2 do `PLANO.md`: identidade visual (cores, fontes e logos como variáveis do Tailwind).
+  - Atualizar o `README.md` (ainda é o texto padrão do Astro).
   - Decidir depois se o link público será publicado (etapa 9, exige autorização).
   - Decidir se `DIARIO.md` e `CLAUDE.md` continuam fora do GitHub (ver aviso nas decisões).

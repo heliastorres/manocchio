@@ -8,3 +8,15 @@
 # Dependências e ambientes locais (podem ser recriados)
 .venv/
 node_modules/
+
+# Saída do build e tipos gerados pelo Astro
+dist/
+.astro/
+
+# Logs do npm
+npm-debug.log*
+
+# Arquivos do macOS e do editor
+.DS_Store
+.idea/
+.env.production
