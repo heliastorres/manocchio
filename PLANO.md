@@ -11,7 +11,7 @@ Este plano segue os requisitos e as decisões registradas no `DIARIO.md`. Cada e
 - **Commit:** "Base do projeto com Astro e Tailwind".
 
 ## Etapa 2: Identidade visual
-- Definir as cores (azul `#003388`, verde `#80b522`, verde escuro `#4e8221`, preto `#141414`, cinzas e branco) e as fontes (Roboto e Roboto Condensed) em um único lugar, como variáveis do tema Tailwind.
+- Definir as cores (verde `#80b522`, verde escuro `#4e8221`, preto `#141414`, cinzas e branco) e as fontes (Roboto e Roboto Condensed) em um único lugar, como variáveis do tema Tailwind.
 - Baixar as logos (colorida e branca) para a pasta `public/`.
 - **Verificação:** uma página de teste mostra as cores, fontes e logos corretas.
 - **Commit:** "Tokens de cor, fontes e logos".

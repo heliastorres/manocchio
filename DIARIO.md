@@ -6,7 +6,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 
 - **Tecnologia do site atual:** WordPress (imagens em `wp-content`).
 - **Fontes:** Roboto e Roboto Condensed (Google Fonts).
-- **Cores principais:** azul `#003388`, verde `#80b522`, verde escuro `#4e8221`, preto `#141414`, cinzas e branco.
+- **Cores principais:** verde `#80b522`, verde escuro `#4e8221`, preto `#141414`, cinzas e branco.
 - **Logos:** versão colorida e versão branca (rodapé), no servidor do próprio site.
 - **Páginas (todas respondem com 200, exceto redirecionamentos 301):**
   - Início, Sobre (História, Guilherme Manocchio), Treinamento (Metodologia, TrainingPeaks, a distância, presenciais: Nado Livre Mercês, Acquafitness Três Marias, UPX Sports), Dicas & Fotos, Parceiros & Indicações, Contato, Política de privacidade.
@@ -49,11 +49,11 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **Branch:** trabalho feito em `feature/etapa-1-base-astro`, com PR para a `main`.
 - **Problemas:** o instalador do Astro criou a pasta `extinct-equinox/` em vez de usar a raiz. Resolvido movendo os arquivos para a raiz e apagando a pasta (que tinha um repositório git próprio, criado pelo instalador, sem nada importante). O `.gitignore` foi unificado.
 - **Etapa 1 verificada:** instalação limpa (`npm ci`) e build passam, TypeScript estrito ativo, árvore git limpa. PR #1 já incorporado à `main`.
-- **Etapa 2 (identidade visual):** cores (azul, verde, verde escuro, preto, branco e 4 cinzas) e fontes (Roboto e Roboto Condensed) definidas num só lugar, `src/styles/global.css`, e viram classes do Tailwind (`bg-azul`, `text-verde`, `font-titulo`...). Logos colorida e branca baixadas para `public/logos/`. Página de teste em `/teste-identidade`.
+- **Etapa 2 (identidade visual):** cores (verde, verde escuro, preto, branco e 4 cinzas) e fontes (Roboto e Roboto Condensed) definidas num só lugar, `src/styles/global.css`, e viram classes do Tailwind (`bg-verde`, `text-preto`, `font-titulo`...). Logos colorida e branca baixadas para `public/logos/`. Página de teste em `/teste-identidade`.
 - **Decisões (etapa 2):**
   - Fontes instaladas pelo pacote `@fontsource` (hospedadas no próprio site) em vez do link do Google Fonts: mais rápido e sem enviar dados dos visitantes ao Google.
   - Cores com nomes em português, como o resto do projeto.
-- **Problemas (etapa 2):** as logos do site atual têm só 150x141 px, pequenas para telas grandes ou de alta densidade. Para usá-las bem maiores, vamos precisar de versões melhores (pedir ao cliente) ou redesenhá-las. O build mostra o azul como `#038`, que é o mesmo `#003388` em forma curta (não é erro).
+- **Problemas (etapa 2):** as logos do site atual têm só 150x141 px, pequenas para telas grandes ou de alta densidade. Para usá-las bem maiores, vamos precisar de versões melhores (pedir ao cliente) ou redesenhá-las. O azul `#003388` do levantamento inicial não foi encontrado no site atual (nem no HTML, nem no CSS, nem na logo), então foi **retirado do escopo das cores** por decisão do usuário. A paleta é verde, verde escuro, preto, branco e cinzas.
 - **Estado atual:** etapas 1 e 2 prontas. Verificado por build e por checagem das classes no CSS gerado; ainda não olhei a página de teste em um navegador.
 - **Próximos passos:**
   - Abrir `/teste-identidade` no navegador (`npm run dev`) e conferir cores, fontes e logos.
