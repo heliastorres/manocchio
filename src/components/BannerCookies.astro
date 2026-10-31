@@ -30,6 +30,8 @@ const { cookies } = conteudo;
 
 <script>
   document.getElementById('banner-cookies-botao')?.addEventListener('click', () => {
+    // Tira o foco do botão antes de remover o aviso (senão o foco se perde)
+    document.getElementById('conteudo')?.focus({ preventScroll: true });
     document.getElementById('banner-cookies')?.remove();
   });
 </script>

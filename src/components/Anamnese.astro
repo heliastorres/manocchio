@@ -11,15 +11,15 @@ const { anamnese } = conteudo;
     <div class="md:col-span-6">
       <h2 id="anamnese-titulo" data-revelar class="titulo-secao md:sticky md:top-28">{anamnese.titulo}</h2>
     </div>
-    <ul class="space-y-8 md:col-span-6">
+    <div class="space-y-8 md:col-span-6">
       {
         anamnese.texto.map((p) => (
-          <li data-revelar class="flex gap-5">
+          <div data-revelar class="flex gap-5">
             <span class="marcador mt-[0.55em] text-verde text-xl" aria-hidden="true"></span>
             <p class="texto-corrido">{p}</p>
-          </li>
+          </div>
         ))
       }
-    </ul>
+    </div>
   </div>
 </Secao>

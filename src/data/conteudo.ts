@@ -140,7 +140,7 @@ export const conteudo = {
   // 3. Treinos online (RF3: um botão por modalidade)
   treinos: {
     id: 'treinos',
-    titulo: 'Treinos práticos, simples e eficaz',
+    titulo: 'Treinos práticos, simples e eficazes',
     texto: [
       'Escolha a modalidade, preencha a ficha de inscrição e finalize o pagamento por boleto ou cartão. Deixe que a gente ajude você a executar o seu planejamento esportivo com profissionalismo e seriedade.',
     ],

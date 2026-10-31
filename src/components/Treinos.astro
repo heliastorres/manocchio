@@ -51,11 +51,22 @@ const { treinos } = conteudo;
 
 <style is:global>
   /* Ao apontar para uma modalidade, as outras esmaecem (a atual fica firme) */
-  .lista-modalidades li {
+  /* O esmaecimento é no link (filho), porque o <li> já tem a transição da entrada ao rolar */
+  .lista-modalidades li > a {
     transition: opacity 0.25s;
   }
-  .lista-modalidades:hover li:not(:hover),
-  .lista-modalidades:focus-within li:not(:focus-within) {
+  .lista-modalidades:focus-within li:not(:focus-within) > a {
     opacity: 0.45;
+  }
+  @media (hover: hover) {
+    .lista-modalidades:hover li:not(:hover) > a {
+      opacity: 0.45;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lista-modalidades li > a,
+    .lista-modalidades li > a * {
+      transition: none !important;
+    }
   }
 </style>

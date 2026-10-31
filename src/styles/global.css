@@ -109,9 +109,12 @@
   .botao:active {
     transform: scale(0.97);
   }
-  .botao:focus-visible {
-    outline: 3px solid currentColor;
-    outline-offset: 3px;
+  /* Anel de foco de duas cores (filete preto + anel branco): aparece em fundo claro e escuro */
+  .botao:focus-visible,
+  .anel-foco:focus-visible {
+    outline: 3px solid var(--color-branco);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--color-preto);
   }
 
   /* VIDRO ("liquid glass" em CSS): fundo translúcido + desfoque do que passa atrás */
@@ -134,7 +137,8 @@
     opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--atraso, 0ms),
     transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--atraso, 0ms);
 }
-.js [data-revelar].visivel {
+.js [data-revelar].visivel,
+.js-falhou [data-revelar] {
   opacity: 1;
   transform: none;
 }

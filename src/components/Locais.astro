@@ -85,6 +85,12 @@ const { locais } = conteudo;
       opacity: 0.5;
     }
   }
+  @media (prefers-reduced-motion: reduce) {
+    .locais-nome,
+    [data-previa] {
+      transition: none !important;
+    }
+  }
 </style>
 
 <script>
