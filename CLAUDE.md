@@ -31,3 +31,10 @@ Quando o usuário pedir "atualiza o diário" (ou quando a sessão terminar):
 
 ## Skills
 - As skills instaladas ficam em `.agents/skills/` e `.claude/skills/`. Essas pastas não vão para o git.
+
+## Fluxo de trabalho por etapa (a partir da Etapa 3)
+Cada etapa do `PLANO.md` segue: branch (`feature/etapa-N-...`) → trabalho → verificação → PR → merge → diário.
+- **`executing-plans`:** seguir o plano passo a passo, uma etapa por vez.
+- **`verification-before-completion`:** antes de dizer que algo está pronto, rodar o comando que prova (build, checagens) e mostrar o resultado. Nada de "deve estar funcionando".
+- **`requesting-code-review`:** antes de abrir cada PR, revisar o diff.
+- Outras skills entram só na etapa em que fazem sentido: `design-taste-frontend` (etapa 6), `run` (etapa 7), `security-review` e `finishing-a-development-branch` (etapa 9), `systematic-debugging` (quando algo quebrar).
