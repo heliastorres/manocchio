@@ -29,9 +29,11 @@ const { cabecalho, acessibilidade } = conteudo;
     </nav>
 
     <div class="flex items-center gap-3">
-      <Botao href={cabecalho.botao.href} variante="primario" class="hidden !py-2 sm:inline-flex">
-        {cabecalho.botao.rotulo}
-      </Botao>
+      <div class="hidden sm:block">
+        <Botao href={cabecalho.botao.href} variante="primario" class="!py-2">
+          {cabecalho.botao.rotulo}
+        </Botao>
+      </div>
       <button
         type="button"
         id="menu-botao"
@@ -68,9 +70,11 @@ const { cabecalho, acessibilidade } = conteudo;
 </header>
 
 <script>
-  const botao = document.getElementById('menu-botao') as HTMLButtonElement;
-  const menu = document.getElementById('menu-movel') as HTMLElement;
+  const botao = document.getElementById('menu-botao') as HTMLButtonElement | null;
+  const menu = document.getElementById('menu-movel');
   const icone = document.getElementById('menu-icone');
+
+  if (botao && menu) {
 
   function definir(aberto: boolean) {
     botao.setAttribute('aria-expanded', String(aberto));
@@ -85,6 +89,10 @@ const { cabecalho, acessibilidade } = conteudo;
     if ((e.target as HTMLElement).closest('a')) definir(false);
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') definir(false);
+    if (e.key === 'Escape' && !menu.hidden) {
+      definir(false);
+      botao.focus();
+    }
   });
+  }
 </script>

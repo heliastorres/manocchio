@@ -85,6 +85,7 @@ export const conteudo = {
       numero: whatsappNumero,
       href: whatsappHref,
     },
+    redesTitulo: 'Redes sociais',
     redes: [
       { rotulo: 'Instagram', href: 'https://www.instagram.com/manocchioteam/' },
       { rotulo: 'Facebook', href: 'https://www.facebook.com/ManocchioTeam/' },

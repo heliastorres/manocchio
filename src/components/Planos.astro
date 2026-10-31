@@ -17,12 +17,12 @@ const { planos } = conteudo;
             plano.destaque ? 'border-4 border-verde' : 'border border-cinza-300',
           ]}
         >
+          <h3 class="font-titulo text-2xl font-bold uppercase">{plano.nome}</h3>
           {plano.selo && (
             <span class="absolute -top-4 left-8 bg-verde px-3 py-1 font-titulo text-sm font-bold uppercase tracking-wide text-preto">
               {plano.selo}
             </span>
           )}
-          <h3 class="font-titulo text-2xl font-bold uppercase">{plano.nome}</h3>
           <p class="mt-3 flex-1 text-cinza-700">{plano.descricao}</p>
           <Botao href={plano.botao.href} variante={plano.destaque ? 'primario' : 'escuro'} class="mt-6">
             {plano.botao.rotulo}
