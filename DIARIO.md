@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 (base Astro + Tailwind) e 2 (identidade visual) concluídas; próxima é a etapa 3 (imagens).
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 (base Astro + Tailwind), 2 (identidade visual) e 3 (imagens) concluídas; próxima é a etapa 4 (conteúdo).
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção.
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -54,10 +54,18 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - Fontes instaladas pelo pacote `@fontsource` (hospedadas no próprio site) em vez do link do Google Fonts: mais rápido e sem enviar dados dos visitantes ao Google.
   - Cores com nomes em português, como o resto do projeto.
 - **Problemas (etapa 2):** as logos do site atual têm só 150x141 px, pequenas para telas grandes ou de alta densidade. Para usá-las bem maiores, vamos precisar de versões melhores (pedir ao cliente) ou redesenhá-las. O azul `#003388` do levantamento inicial não foi encontrado no site atual (nem no HTML, nem no CSS, nem na logo), então foi **retirado do escopo das cores** por decisão do usuário. A paleta é verde, verde escuro, preto, branco e cinzas.
-- **Estado atual:** etapas 1 e 2 prontas. Verificado por build e por checagem das classes no CSS gerado; ainda não olhei a página de teste em um navegador.
+- **Etapa 3 (imagens):** 6 fotos do site atual tratadas e convertidas para WebP em `src/assets/fotos/` (equipe de ciclismo, atleta de capacete verde, duas piscinas, treino de natação e retrato do Guilherme). Total de 1,7 MB, contra 5,5 MB das originais. O tratamento (recorte, brilho, contraste, cor) é feito pelo script `scripts/tratar-imagens.mjs`, que pode ser repetido. As fotos aparecem na página `/teste-identidade`.
+- **Decisões (etapa 3):**
+  - As fotos originais ficam fora do git (são pesadas). O script lista de onde baixá-las.
+  - Fotos ficam em `src/assets/` e não em `public/`, para o Astro gerar versões menores sozinho (de 12 a 150 KB, conforme a tela). O build confirmou.
+  - O `sharp` (biblioteca de imagens) foi declarado como dependência de desenvolvimento, porque o script depende dele.
+  - Tratamento leve: corte do asfalto vazio na foto da equipe e ajuste suave de contraste e cor, sem mudar o aspecto das fotos.
+  - **Descartadas:** o banner de parcerias (foto de banco de imagens, com escurecimento já embutido) e o gráfico da pista UPX (material de divulgação com texto).
+- **Problemas (etapa 3):** a foto do Guilherme tem só 418 px de largura. Não foi ampliada, para não borrar, então só serve em tamanho pequeno. Se for usada grande, precisa de uma foto melhor. Os locais de treino da seção 11 só têm foto de duas piscinas (Nado Livre e Três Marias); falta foto do UPX Sports.
+- **Estado atual:** etapas 1, 2 e 3 prontas. Verificado por build e por prévia visual das imagens tratadas.
 - **Próximos passos:**
-  - Abrir `/teste-identidade` no navegador (`npm run dev`) e conferir cores, fontes e logos.
-  - Etapa 3 do `PLANO.md`: imagens (baixar, tratar e converter para WebP).
+  - Etapa 4 do `PLANO.md`: conteúdo (textos e links em arquivo de dados).
+  - Pedir ao cliente (ou conferir) fotos melhores: Guilherme, UPX Sports e logos em alta resolução.
   - Apagar `src/pages/teste-identidade.astro` antes da entrega (é só uma página temporária).
   - Atualizar o `README.md` (ainda é o texto padrão do Astro).
   - Decidir depois se o link público será publicado (etapa 9, exige autorização).
