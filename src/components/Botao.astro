@@ -1,0 +1,29 @@
+---
+// Botão em forma de link. Links externos (https://...) abrem em outra aba.
+interface Props {
+  href: string;
+  variante?: 'primario' | 'secundario' | 'escuro';
+  class?: string;
+}
+const { href, variante = 'primario', class: extra = '' } = Astro.props;
+const externo = href.startsWith('http');
+
+const estilos = {
+  primario: 'bg-verde text-preto hover:bg-verde-escuro hover:text-branco',
+  secundario: 'border-2 border-branco text-branco hover:bg-branco hover:text-preto',
+  escuro: 'bg-preto text-branco hover:bg-verde-escuro',
+};
+---
+
+<a
+  href={href}
+  target={externo ? '_blank' : undefined}
+  rel={externo ? 'noopener noreferrer' : undefined}
+  class:list={[
+    'inline-flex items-center justify-center px-6 py-3 font-titulo text-lg font-bold uppercase tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-verde',
+    estilos[variante],
+    extra,
+  ]}
+>
+  <slot />
+</a>

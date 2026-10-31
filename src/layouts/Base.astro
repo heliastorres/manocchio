@@ -1,0 +1,41 @@
+---
+import '../styles/global.css';
+import { conteudo } from '../data/conteudo';
+
+const { site, acessibilidade } = conteudo;
+---
+
+<!doctype html>
+<html lang={site.idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={site.descricao} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{site.titulo}</title>
+  </head>
+  <body class="bg-branco font-texto text-preto antialiased">
+    <a
+      href="#conteudo"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-preto focus:px-4 focus:py-2 focus:text-branco"
+    >
+      {acessibilidade.pularParaConteudo}
+    </a>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  /* Âncoras do menu não ficam escondidas atrás do cabeçalho fixo */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+</style>

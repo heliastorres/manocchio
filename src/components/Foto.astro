@@ -1,0 +1,28 @@
+---
+// Foto otimizada: o Astro gera versões menores para cada largura de tela.
+import { Image } from 'astro:assets';
+import { obterFoto } from '../data/fotos';
+import type { Imagem } from '../data/conteudo';
+
+interface Props {
+  imagem: Imagem;
+  /** Larguras (px) que o Astro vai gerar. */
+  widths: number[];
+  /** Quanto da tela a foto ocupa, para o navegador escolher a versão certa. */
+  sizes: string;
+  /** Foto acima da dobra (carrega primeiro). */
+  prioridade?: boolean;
+  class?: string;
+}
+const { imagem, widths, sizes, prioridade = false, class: extra = '' } = Astro.props;
+---
+
+<Image
+  src={obterFoto(imagem.arquivo)}
+  alt={imagem.alt}
+  widths={widths}
+  sizes={sizes}
+  loading={prioridade ? 'eager' : 'lazy'}
+  fetchpriority={prioridade ? 'high' : undefined}
+  class={extra}
+/>
