@@ -31,7 +31,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - Plano de execução criado em `PLANO.md` (9 etapas).
   - Decisão pendente: publicar em hospedagem gratuita para o link ficar acessível fora do computador (exige autorização).
   - Critérios de qualidade: design moderno, skill `design-taste-frontend`, responsivo, acessível.
-- **Pontos em aberto:** publicação pública (etapa 9 do plano) e a decisão sobre o git dos arquivos `DIARIO.md` e `CLAUDE.md`.
+- **Pontos em aberto:** publicação pública (etapa 9 do plano). (A decisão sobre o git do `DIARIO.md` e do `CLAUDE.md` foi resolvida: os dois agora são versionados.)
 
 ---
 
@@ -39,12 +39,12 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que foi feito:** criados o `CLAUDE.md` e o `DIARIO.md` na raiz do projeto. Definido o fluxo de trabalho entre sessões. Limpas as sessões antigas da pasta de histórico do Claude (a pasta `memory/` foi mantida). Repositório git iniciado (branch `main`), primeiro commit feito e projeto enviado ao GitHub em um repositório privado: `github.com/heliastorres/manocchio`.
 - **Decisões:**
   - O fluxo é: ao fim de cada sessão, pedir "atualiza o diário"; depois abrir uma sessão nova (sem `/compact`) e dizer "retomar projeto".
-  - `DIARIO.md`, `CLAUDE.md` e a pasta de skills ficam no `.gitignore`, por escolha do usuário. Isso significa que eles não sobem para o GitHub e não aparecem em um clone novo do repositório.
+  - Inicialmente `DIARIO.md`, `CLAUDE.md` e a pasta de skills ficavam no `.gitignore`. **Depois mudou:** o `DIARIO.md` e o `CLAUDE.md` passaram a ser versionados (assim um clone novo ou outro computador mantém as regras e o histórico). Só as skills (`.agents/`, `.claude/skills/`) continuam fora do git.
   - O repositório é **privado**, criado com o `gh` (CLI do GitHub).
 - **Problemas:**
   - O envio por SSH falhou com `Permission denied (publickey)`, porque não há chave SSH configurada nesta máquina. Resolvido trocando a conexão para HTTPS (`gh auth setup-git`), que usa o login do `gh`.
 - **Visão geral e escopo do protótipo:** definidos e registrados na seção "Visão geral do projeto" acima.
-- **Requisitos e plano:** requisitos funcionais (RF1 a RF6) e não funcionais (RNF1 a RNF6) foram discutidos e aprovados. O plano de execução com 9 etapas está em `PLANO.md`, ainda sem commit.
+- **Requisitos e plano:** requisitos funcionais (RF1 a RF6) e não funcionais (RNF1 a RNF6) foram discutidos e aprovados. O plano de execução com 9 etapas está em `PLANO.md` (commitado).
 - **Etapa 1 (base do projeto):** projeto Astro criado na raiz, com TypeScript estrito e Tailwind 4 (via `astro add tailwind`). Nome do pacote: `manocchio`. A página inicial importa o CSS do Tailwind. Testado: `npm run dev` responde HTTP 200 e `npm run build` passa.
 - **Branch:** trabalho feito em `feature/etapa-1-base-astro`, com PR para a `main`.
 - **Problemas:** o instalador do Astro criou a pasta `extinct-equinox/` em vez de usar a raiz. Resolvido movendo os arquivos para a raiz e apagando a pasta (que tinha um repositório git próprio, criado pelo instalador, sem nada importante). O `.gitignore` foi unificado.
@@ -86,14 +86,22 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - Os 8 testes do verificador que eu fazia à mão viraram testes automáticos (`npm test`, 18 testes ao todo).
 - **Anotado, sem mexer (menores):** o verificador compara o fim do caminho para achar `id` e `arquivo` (basta hoje); `cookies.botao` e `site.idioma` são textos simples e não `{rotulo, href}`.
 - **Limite:** o TypeScript não está instalado no projeto, então a conferência de tipos só acontece no editor (VS Code), não por comando. Vale decidir na etapa 7 ou 8 se adicionamos `@astrojs/check`.
-- **Estado atual:** etapas 1 a 4 prontas e revisadas. Etapa 4 verificada por 18 testes, pelo verificador de conteúdo, pelo build e pelo teste dos links.
-- **Próximos passos:**
-  - Revisar os textos em `/teste-conteudo` (`npm run dev`) e pedir mudanças se quiser.
-  - Etapa 5 do `PLANO.md`: componentes e seções, lendo os dados de `src/data/conteudo.ts`.
-  - Apagar `src/pages/teste-conteudo.astro` antes da entrega (também é temporária).
-  - A partir da etapa 3 o fluxo é: `executing-plans`, `verification-before-completion` e `requesting-code-review` antes de cada PR (registrado no `CLAUDE.md`).
+- **Fluxo de trabalho adotado (decisões):**
+  - Cada etapa tem a sua branch (`feature/etapa-N-...`), é verificada, revisada, vai para a `main` por Pull Request (PR) e a branch é apagada. Mudanças só de documentação (`DIARIO.md`, `CLAUDE.md`) vão direto na `main`.
+  - Skills usadas a partir da etapa 3: `executing-plans`, `verification-before-completion` e `requesting-code-review` (revisor independente antes de cada PR). Registrado no `CLAUDE.md`. Outras entram só na etapa em que fazem sentido (`design-taste-frontend` na 6, `run` na 7, `security-review` e `finishing-a-development-branch` na 9, `systematic-debugging` quando algo quebrar).
+  - Adaptações da skill `executing-plans`: uso branch comum em vez de *worktree* (cópia de trabalho separada), porque o projeto tem um só autor; o `DIARIO.md` faz o papel do livro de registro da skill; o `PLANO.md` não está no formato dela, então os testes foram escritos onde cabiam (scripts de verificação), e não em todo passo.
+- **Estado atual:** etapas 1 a 4 prontas, revisadas e na `main` (PRs #1 a #6 incorporados, último merge `d3fd7d9`). Árvore de trabalho limpa. Etapa 4 verificada por 18 testes, pelo verificador de conteúdo, pelo build e pelo teste dos links.
+- **Próximos passos (para a sessão nova):**
+  - Dizer "retomar projeto" e, depois do resumo, pedir a Etapa 5.
+  - Antes da Etapa 5, ler os textos em `/teste-conteudo` (`npm run dev`, abrir `http://localhost:4321/teste-conteudo`) e pedir as mudanças de redação que quiser. Mudar texto depois dos componentes dá mais trabalho.
+  - Etapa 5 do `PLANO.md` (componentes e seções): ler tudo de `src/data/conteudo.ts` e das fotos via `obterFoto()` (`src/data/fotos.ts`). Pontos para lembrar:
+    - `texto` é sempre lista de parágrafos.
+    - `locais.itens[0]` (UPX Sports) tem `imagem: null`: o componente precisa tratar a falta de foto.
+    - Definir `widths` e `sizes` das imagens por seção (a chamada principal ocupa a tela toda e precisa de larguras maiores que as da página de teste).
+    - Os textos de acessibilidade (menu, rodapé, cookies, logo) estão em `conteudo.acessibilidade`, `cabecalho.logo`, `rodape` e `cookies`.
+    - Rodar `npm run verificar:conteudo` e `npm test` sempre que mexer em `conteudo.ts`.
+  - Apagar antes da entrega as duas páginas temporárias: `src/pages/teste-identidade.astro` e `src/pages/teste-conteudo.astro`.
   - Pedir ao cliente (ou conferir) fotos melhores: Guilherme, UPX Sports e logos em alta resolução.
-  - Apagar `src/pages/teste-identidade.astro` antes da entrega (é só uma página temporária).
   - Atualizar o `README.md` (ainda é o texto padrão do Astro).
-  - Decidir depois se o link público será publicado (etapa 9, exige autorização).
-  - Decidir se `DIARIO.md` e `CLAUDE.md` continuam fora do GitHub (ver aviso nas decisões).
+  - Etapa 7 ou 8: decidir se instalamos o `@astrojs/check` para conferir tipos por comando.
+  - Etapa 9: conferir de novo o `sharp` como dependência de desenvolvimento e decidir se o link público será publicado (exige autorização).
