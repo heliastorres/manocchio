@@ -1,0 +1,48 @@
+---
+import { conteudo } from '../data/conteudo';
+
+const { contato, rodape } = conteudo;
+---
+
+<footer id={contato.id} aria-label={rodape.rotuloAcessibilidade} class="bg-preto text-branco">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 md:grid-cols-3 md:px-6">
+    <div>
+      <img src="/logos/logo-branca.png" alt={conteudo.site.nome} width="150" height="141" class="h-24 w-auto" loading="lazy" />
+      <p class="mt-4 text-cinza-300">{contato.endereco}</p>
+    </div>
+    <div>
+      <h2 class="font-titulo text-2xl font-bold uppercase">{contato.titulo}</h2>
+      <ul class="mt-4 space-y-2">
+        <li><a class="underline underline-offset-4 hover:text-verde" href={contato.email.href}>{contato.email.rotulo}</a></li>
+        {contato.telefones.map((t) => <li><a class="underline underline-offset-4 hover:text-verde" href={t.href}>{t.rotulo}</a></li>)}
+        <li>
+          <a class="underline underline-offset-4 hover:text-verde" href={contato.whatsapp.href} target="_blank" rel="noopener noreferrer">
+            {contato.whatsapp.rotulo}
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="font-titulo text-2xl font-bold uppercase">{contato.redesTitulo}</h2>
+      <ul class="mt-4 space-y-2">
+        {
+          contato.redes.map((r) => (
+            <li>
+              <a class="underline underline-offset-4 hover:text-verde" href={r.href} target="_blank" rel="noopener noreferrer">
+                {r.rotulo}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-cinza-700">
+    <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-sm text-cinza-300 sm:flex-row sm:justify-between md:px-6">
+      <p>{rodape.copyright}</p>
+      <a class="underline underline-offset-4 hover:text-verde" href={rodape.politica.href} target="_blank" rel="noopener noreferrer">
+        {rodape.politica.rotulo}
+      </a>
+    </div>
+  </div>
+</footer>

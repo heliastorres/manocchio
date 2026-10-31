@@ -1,0 +1,98 @@
+---
+import { conteudo } from '../data/conteudo';
+import Botao from './Botao.astro';
+
+const { cabecalho, acessibilidade } = conteudo;
+---
+
+<header class="fixed inset-x-0 top-0 z-50 bg-branco shadow-sm">
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 md:px-6">
+    <a href={cabecalho.logo.href} aria-label={cabecalho.logo.alt}>
+      <img src="/logos/logo-cor.png" alt="" width="150" height="141" class="h-12 w-auto" />
+    </a>
+
+    <nav aria-label={acessibilidade.menuPrincipal} class="hidden lg:block">
+      <ul class="flex items-center gap-6">
+        {
+          cabecalho.menu.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="font-titulo text-base font-bold uppercase tracking-wide hover:text-verde-escuro"
+              >
+                {item.rotulo}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:block">
+        <Botao href={cabecalho.botao.href} variante="primario" class="!py-2">
+          {cabecalho.botao.rotulo}
+        </Botao>
+      </div>
+      <button
+        type="button"
+        id="menu-botao"
+        aria-expanded="false"
+        aria-controls="menu-movel"
+        class="p-2 lg:hidden"
+        data-abrir={acessibilidade.menuAbrir}
+        data-fechar={acessibilidade.menuFechar}
+        aria-label={acessibilidade.menuAbrir}
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path id="menu-icone" d="M3 6h18M3 12h18M3 18h18"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <nav id="menu-movel" aria-label={acessibilidade.menuPrincipal} hidden class="border-t border-cinza-300 bg-branco lg:hidden">
+    <ul class="mx-auto max-w-6xl px-4 py-2 md:px-6">
+      {
+        cabecalho.menu.map((item) => (
+          <li>
+            <a href={item.href} class="block py-3 font-titulo text-lg font-bold uppercase tracking-wide">
+              {item.rotulo}
+            </a>
+          </li>
+        ))
+      }
+      <li class="py-3 sm:hidden">
+        <Botao href={cabecalho.botao.href} class="w-full">{cabecalho.botao.rotulo}</Botao>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const botao = document.getElementById('menu-botao') as HTMLButtonElement | null;
+  const menu = document.getElementById('menu-movel');
+  const icone = document.getElementById('menu-icone');
+
+  if (botao && menu) {
+
+  function definir(aberto: boolean) {
+    botao.setAttribute('aria-expanded', String(aberto));
+    botao.setAttribute('aria-label', (aberto ? botao.dataset.fechar : botao.dataset.abrir) ?? '');
+    menu.hidden = !aberto;
+    icone?.setAttribute('d', aberto ? 'M6 6l12 12M18 6L6 18' : 'M3 6h18M3 12h18M3 18h18');
+  }
+
+  botao.addEventListener('click', () => definir(botao.getAttribute('aria-expanded') !== 'true'));
+  // Clicar num item do menu fecha o menu; Esc também.
+  menu.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) definir(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      definir(false);
+      botao.focus();
+    }
+  });
+  }
+</script>

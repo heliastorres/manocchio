@@ -1,0 +1,25 @@
+---
+import { conteudo } from '../data/conteudo';
+import Foto from './Foto.astro';
+
+const { resultados } = conteudo;
+---
+
+<section id={resultados.id} aria-labelledby="resultados-titulo" class="bg-branco">
+  <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:gap-14 md:px-6 md:py-24">
+    <Foto
+      imagem={resultados.imagem}
+      widths={[480, 720, 1000]}
+      sizes="(min-width: 1152px) 560px, (min-width: 768px) 45vw, 100vw"
+      class="h-auto w-full object-cover md:order-last"
+    />
+    <div>
+      <h2 id="resultados-titulo" class="font-titulo text-3xl font-bold uppercase leading-tight md:text-4xl">
+        {resultados.titulo}
+      </h2>
+      <div class="mt-6 space-y-4 text-lg text-cinza-700">
+        {resultados.texto.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </div>
+</section>

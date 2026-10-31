@@ -1,0 +1,12 @@
+---
+import { conteudo } from '../data/conteudo';
+import Secao from './Secao.astro';
+
+const { anamnese } = conteudo;
+---
+
+<Secao id={anamnese.id} titulo={anamnese.titulo}>
+  <div class="max-w-3xl space-y-4 text-lg text-cinza-700">
+    {anamnese.texto.map((p) => <p>{p}</p>)}
+  </div>
+</Secao>
