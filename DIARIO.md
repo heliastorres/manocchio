@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 8 concluídas (a 8 pelo PR #14) e a 9 (entrega, PR #15) incorporada; o site já está publicado no GitHub Pages (PR #16). Extras da etapa 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 8 concluídas (a 8 pelo PR #14) e a 9 (entrega, PR #15) incorporada; projeto concluído e publicado no GitHub Pages (PR #16); ver FECHAMENTO na entrada de 2026-11-01. Extras da etapa 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção. Desde o PR #10 o projeto também tem **React + Motion** (só para os ícones animados do `lucide-animated`).
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -36,6 +36,15 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 ---
 
 ## 2026-11-01
+- **FECHAMENTO DO PROJETO (protótipo entregue):** as 9 etapas do `PLANO.md` foram concluídas e o site está publicado em https://heliastorres.github.io/manocchio/. Fora do protótipo, desde o início: login, painel de administração, formulário funcional e as páginas internas.
+  - **Em aberto, sem bloquear a entrega:**
+    1. Sete links apontam para o site antigo (`manocchiosports.com`), que não abria quando testei (erro de DNS). Combinar com o cliente o que fazer.
+    2. Não testados: iPhone/Safari de verdade, prévia do link no WhatsApp e leitor de tela.
+    3. A chamada desliga o efeito de rolagem abaixo de uns 710 px de altura de janela (de propósito). Dá para compactar a chamada para ligar em janelas menores.
+    4. Os ícones animados somam uns 170 KB de JavaScript (só carregam quando aparecem). A alternativa mais leve é animação em CSS.
+    5. O e-mail pessoal do Gmail aparece em 33 commits antigos do repositório, que é público.
+  - **Se o cliente aprovar e quiser seguir:** páginas internas, domínio próprio, resolver os itens acima.
+  - **Como retomar:** dizer "retomar projeto". O site se atualiza sozinho a cada merge na `main` (robô em `.github/workflows/deploy.yml`).
 - **SITE PUBLICADO (PR #16 incorporado):** o protótipo está no ar em **https://heliastorres.github.io/manocchio/**. O GitHub Pages já estava ligado com a fonte GitHub Actions. O robô (`deploy.yml`) rodou no merge: build e publicação passaram (28 s na publicação).
   - **Conferido no endereço real, no Chrome:** página responde 200; título correto; `canonical` e imagem de prévia com o endereço completo (`og.jpg` responde 200); nenhuma requisição com erro; nenhuma imagem quebrada; sem rolagem horizontal; sem erro no console; efeito da chamada ligado no computador e no celular simulado; 8 de 8 ícones animados ativos no computador (no celular, 7 de 8 depois de rolar até duas seções, o que é o esperado, porque cada ícone só carrega quando aparece na tela).
   - **Como atualizar o site daqui para frente:** é só fazer o merge de um PR na `main`. O robô publica sozinho em uns 2 minutos. Também dá para rodar na mão pela aba Actions do GitHub. O robô só depende do `npm test` e do `npm run build` passarem.
