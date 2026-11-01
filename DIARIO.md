@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 6 concluídas (7 incorporada pelo PR #13; 8 em andamento), incluindo os extras da 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 7 concluídas (a 7 pelo PR #13) e a 8 em andamento. Extras da etapa 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção. Desde o PR #10 o projeto também tem **React + Motion** (só para os ícones animados do `lucide-animated`).
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -63,7 +63,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - [ ] **Não testado:** os ícones animados com o teclado em um navegador real (só medi que o foco aparece).
 - **Decisões:** corrigi só o que a medição mostrou como problema. Os links de contato no computador continuam com a altura de antes (a regra de 44 px vale só até a largura `md`).
 - **Problemas:** nenhum aberto. O teste automático de contraste ignora texto sobre foto, então esse caso ficou para conferência manual.
-- **Próximos passos:** aprovar e incorporar o PR da etapa 7. Depois, etapa 8 (SEO e desempenho: título, descrição, Open Graph, e medir o peso do JavaScript dos ícones). Continuam em aberto a decisão sobre a chamada em janelas baixas (efeito desliga abaixo de uns 710 px) e o teste no iPhone.
+- **Próximos passos:** aprovar e incorporar o PR da etapa 8. Depois, etapa 9 (entrega): apagar as páginas de teste, definir o endereço final (`site` no `astro.config.mjs`) e decidir sobre a publicação, que só acontece com a sua autorização. Continuam em aberto: a decisão sobre a chamada em janelas baixas (efeito desliga abaixo de uns 710 px) e o teste no iPhone.
 
 - **Ícones animados (PR #10, incorporado):** instalei o `lucide-animated` (o nome `lucid-animations` não existe no npm), junto com React, Motion e a integração `@astrojs/react`. Usei em dois lugares: setas das modalidades (Treinos) e pino de mapa no link de cada local (Locais). O componente `src/components/IconeAnimado.tsx` anima o ícone quando o **link inteiro** recebe mouse ou foco, e fica parado com "reduzir movimento".
   - **Decisão:** você escolheu manter os ícones animados mesmo sabendo do peso: o site passou a carregar uns 170 KB (comprimido) de JavaScript que antes não existiam (React 66 KB + ícones 100 KB), porque o pacote não deixa carregar só 2 ícones. A alternativa mais leve era fazer a animação em CSS puro.
