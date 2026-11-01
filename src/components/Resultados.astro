@@ -16,12 +16,62 @@ const { resultados } = conteudo;
       </div>
     </div>
     <div class="md:col-span-7" data-revelar>
-      <Foto
-        imagem={resultados.imagem}
-        widths={[640, 1000, 1400]}
-        sizes="(min-width: 1280px) 720px, (min-width: 768px) 58vw, 100vw"
-        class="folha aspect-[4/3] w-full object-cover"
-      />
+      <!-- A moldura em folha recorta a foto; a foto, um pouco maior, desliza por dentro (paralaxe) -->
+      <div data-paralaxe class="folha aspect-[4/3] w-full overflow-hidden">
+        <Foto
+          imagem={resultados.imagem}
+          widths={[640, 1000, 1400]}
+          sizes="(min-width: 1280px) 720px, (min-width: 768px) 58vw, 100vw"
+          class="h-full w-full object-cover will-change-transform"
+        />
+      </div>
     </div>
   </div>
 </Secao>
+
+<script>
+  // PARALAXE: a foto cresce 40% e desliza dentro da moldura enquanto a seção cruza a tela,
+  // então parece se mover mais devagar que a página. É um extra: sem JavaScript ou com
+  // "reduzir movimento" ligado, a foto fica parada, do jeito normal.
+  const moldura = document.querySelector<HTMLElement>('[data-paralaxe]');
+  const foto = moldura?.querySelector<HTMLElement>('img');
+  const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (moldura && foto && 'IntersectionObserver' in window) {
+    const ESCALA = 1.4;
+    let visivel = false;
+    let agendado = false;
+
+    const desenhar = () => {
+      agendado = false;
+      if (reduzir.matches) {
+        foto.style.transform = '';
+        return;
+      }
+      const r = moldura.getBoundingClientRect();
+      const alturaTela = window.innerHeight;
+      // -1 quando a moldura está entrando por baixo, +1 quando está saindo por cima
+      const p = (r.top + r.height / 2 - alturaTela / 2) / (alturaTela / 2 + r.height / 2);
+      const progresso = Math.max(-1, Math.min(1, p));
+      // Folga de cada lado = 20% da altura; usa 90% dela para nunca aparecer borda
+      const deslocamento = -progresso * r.height * ((ESCALA - 1) / 2) * 0.9;
+      foto.style.transform = `translate3d(0, ${deslocamento.toFixed(1)}px, 0) scale(${ESCALA})`;
+    };
+
+    const agendar = () => {
+      if (!visivel || agendado) return;
+      agendado = true;
+      requestAnimationFrame(desenhar);
+    };
+
+    // Só trabalha enquanto a moldura está na tela
+    new IntersectionObserver((entradas) => {
+      visivel = entradas.some((e) => e.isIntersecting);
+      agendar();
+    }).observe(moldura);
+
+    window.addEventListener('scroll', agendar, { passive: true });
+    window.addEventListener('resize', agendar);
+    reduzir.addEventListener('change', agendar);
+  }
+</script>
