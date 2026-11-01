@@ -36,6 +36,13 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 ---
 
 ## 2026-11-01
+- **Ícones animados (branch `feature/etapa-6d-icones`):** instalei o `lucide-animated` (o nome `lucid-animations` não existe no npm), junto com React, Motion e a integração `@astrojs/react`. Usei em dois lugares: setas das modalidades (Treinos) e pino de mapa no link de cada local (Locais). O componente `src/components/IconeAnimado.tsx` anima o ícone quando o **link inteiro** recebe mouse ou foco, e fica parado com "reduzir movimento".
+  - **Decisão:** você escolheu manter os ícones animados mesmo sabendo do peso: o site passou a carregar uns 170 KB (comprimido) de JavaScript que antes não existiam (React 66 KB + ícones 100 KB), porque o pacote não deixa carregar só 2 ícones. A alternativa mais leve era fazer a animação em CSS puro.
+  - **Ficaram de fora:** menu do celular (sem "passar o mouse" no toque), WhatsApp (perderia a logo da marca) e rodapé (não tem ícones de redes).
+  - **Testado no Chrome:** sem erros no console; a seta e o pino animam ao passar o mouse. **Não testado:** celular e teclado.
+- **Paralaxe na foto de Resultados (branch `feature/etapa-6c-paralaxe`, commitada, sem PR ainda):** a foto desliza dentro da moldura em folha. Você achou fraca, então subi a escala de 1,2 para 1,4 (a constante `ESCALA` em `Resultados.astro`). O valor 1,4 já está no commit dessa branch.
+- **Por que o efeito da chamada "sumia":** não era erro de código. O efeito desliga de propósito quando a janela tem menos de uns 710 px de altura (os botões precisam caber). O DevTools aberto embaixo, o zoom ou a barra de favoritos baixam a altura. Também só mede ao carregar a página, então é preciso recarregar depois de mudar a janela. Melhorias possíveis (ainda não feitas): compactar a chamada em janelas baixas e remedir ao mudar a altura no computador.
+- **Atenção com servidores locais:** o link público que você usou estava desatualizado porque serve um build antigo (`astro preview`, porta 4399). Para ver as mudanças ao vivo, use o `npm run dev` (porta 4321).
 - **O que foi feito:** o PR #8 (etapa 6, design) foi incorporado à `main` depois da sua aprovação. Em seguida, numa branch nova (`feature/etapa-6b-scroll`), fiz o **efeito de rolagem "a folha que se abre"** na chamada principal: ao rolar, a chamada fica fixa na tela, a foto da equipe cresce saindo do recorte em folha até ocupar a tela inteira e o texto sobe e some. Depois a página segue normal.
 - **Decisões:**
   - Feito **sem biblioteca** (sem GSAP): um script próprio de uns 100 linhas, dentro de `src/components/Chamada.astro`, lê a rolagem e anima. Motivo: o efeito é um só, e assim a página não ganha o peso de uma biblioteca. (Eu tinha dito que precisaria do GSAP; não precisou.)

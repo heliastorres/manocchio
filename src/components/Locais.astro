@@ -2,6 +2,7 @@
 import { conteudo } from '../data/conteudo';
 import Secao from './Secao.astro';
 import Foto from './Foto.astro';
+import IconeAnimado from './IconeAnimado';
 
 const { locais } = conteudo;
 ---
@@ -42,9 +43,10 @@ const { locais } = conteudo;
               href={local.href}
               target="_blank"
               rel="noopener noreferrer"
-              class="mt-3 inline-block pl-[calc(0.7em+1rem)] text-lg font-bold text-verde-escuro underline underline-offset-4 hover:text-preto focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde-escuro"
+              class="mt-3 ml-[calc(0.7em+1rem)] inline-flex items-center gap-2 text-lg font-bold text-verde-escuro hover:text-preto focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-verde-escuro"
             >
-              {locais.textoLink}<span class="sr-only"> ({local.nome})</span>
+              <IconeAnimado client:visible nome="pino" size={22} />
+              <span class="underline underline-offset-4">{locais.textoLink}<span class="sr-only"> ({local.nome})</span></span>
             </a>
           </li>
         ))
