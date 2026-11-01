@@ -69,6 +69,7 @@ export const conteudo = {
     descricao:
       'Assessoria esportiva de triathlon, corrida, natação e ciclismo em Curitiba, a distância ou presencial, com a metodologia do Head Coach Guilherme Manocchio.',
     idioma: 'pt-BR',
+    imagemOgAlt: 'Equipe Manocchio de ciclismo, de uniforme verde, com os braços erguidos na estrada',
   },
 
   contato: {

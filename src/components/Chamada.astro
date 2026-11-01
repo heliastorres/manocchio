@@ -16,7 +16,8 @@ const { chamada } = conteudo;
   a chamada fica estática, igual a antes (veja o script no fim deste arquivo).
 -->
 <section id={chamada.id} aria-labelledby="chamada-titulo" class="relative isolate bg-preto text-branco" data-cena>
-  <div class="relative isolate overflow-hidden" data-palco>
+  <!-- min-h-svh: a chamada já nasce com a altura da tela (a que o efeito de rolagem usa), então a folha verde não "pula" quando o efeito liga -->
+  <div class="relative isolate min-h-svh overflow-hidden" data-palco>
     <div
       aria-hidden="true"
       class="folha folha-entra absolute -bottom-[26vw] -right-[22vw] -z-10 aspect-square w-[78vw] bg-verde md:-bottom-[30vw] md:-right-[16vw] md:w-[62vw]"
