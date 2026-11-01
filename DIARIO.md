@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 6 concluídas, incluindo os extras da 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 6 concluídas (a 7 está em andamento, ver 2026-11-02), incluindo os extras da 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção. Desde o PR #10 o projeto também tem **React + Motion** (só para os ícones animados do `lucide-animated`).
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -34,6 +34,24 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **Pontos em aberto:** publicação pública (etapa 9 do plano). (A decisão sobre o git do `DIARIO.md` e do `CLAUDE.md` foi resolvida: os dois agora são versionados.)
 
 ---
+
+## 2026-11-02
+- **O que foi feito:** etapa 7 (responsividade e acessibilidade), branch `feature/etapa-7-responsividade-acessibilidade`. Rodei uma auditoria automática no Chrome (largura de 320 a 1440 px, contraste, imagens, títulos, teclado, toque) e corrigi o que falhou: **área de toque pequena no celular**. Os links de contato e redes (21 px de altura), o "Saiba mais e inscreva-se" (28 px), o link da política e o botão "Aceitar" dos cookies agora têm 44 px de altura no celular. No computador o visual não mudou.
+- **Lista de conferência (RNF1 e RNF3):**
+  - [x] Sem rolagem horizontal em 320, 360, 390, 414, 768, 1024, 1280 e 1440 px.
+  - [x] Margem de 16 px nas laterais no celular (menor margem medida: 16 px).
+  - [x] Texto alternativo em todas as fotos (as duas fotos escondidas pelo efeito também têm).
+  - [x] Contraste: nenhuma falha em texto sobre fundo liso. **Não medido:** texto sobre foto (título da chamada durante o efeito de rolagem) e o esmaecimento de 50% nos nomes ao apontar o mouse.
+  - [x] `lang="pt-BR"`, um só `h1`, títulos em ordem, nenhum link ou botão sem nome.
+  - [x] Teclado: 69 paradas de Tab, todas com indicador de foco visível (a barra de ferramentas do Astro, que só existe no modo de desenvolvimento, não conta). A ordem segue a da página.
+  - [x] "Reduzir movimento" ligado e JavaScript desligado: nada fica escondido.
+  - [x] Alvos de toque de 44 px no celular (depois da correção).
+  - [ ] **Não testado:** celular de verdade (iPhone/Safari). Só testei o Chrome do computador simulando tela de celular.
+  - [ ] **Não testado:** leitor de tela (VoiceOver).
+  - [ ] **Não testado:** os ícones animados com o teclado em um navegador real (só medi que o foco aparece).
+- **Decisões:** corrigi só o que a medição mostrou como problema. Os links de contato no computador continuam com a altura de antes (a regra de 44 px vale só até a largura `md`).
+- **Problemas:** nenhum aberto. O teste automático de contraste ignora texto sobre foto, então esse caso ficou para conferência manual.
+- **Próximos passos:** aprovar e incorporar o PR da etapa 7. Depois, etapa 8 (SEO e desempenho: título, descrição, Open Graph, e medir o peso do JavaScript dos ícones). Continuam em aberto a decisão sobre a chamada em janelas baixas (efeito desliga abaixo de uns 710 px) e o teste no iPhone.
 
 ## 2026-11-01
 - **Ícones animados (PR #10, incorporado):** instalei o `lucide-animated` (o nome `lucid-animations` não existe no npm), junto com React, Motion e a integração `@astrojs/react`. Usei em dois lugares: setas das modalidades (Treinos) e pino de mapa no link de cada local (Locais). O componente `src/components/IconeAnimado.tsx` anima o ícone quando o **link inteiro** recebe mouse ou foco, e fica parado com "reduzir movimento".

@@ -2,7 +2,7 @@
 import { conteudo } from '../data/conteudo';
 
 const { contato, rodape, site } = conteudo;
-const classeLink = 'underline underline-offset-4 transition-colors hover:text-verde focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-branco';
+const classeLink = 'inline-flex min-h-11 items-center underline underline-offset-4 transition-colors hover:text-verde focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-branco md:min-h-0';
 ---
 
 <!-- Rodapé: o nome da marca volta em largura total (escrito com texto, não é imagem) -->
@@ -15,7 +15,7 @@ const classeLink = 'underline underline-offset-4 transition-colors hover:text-ve
       </div>
       <div class="md:col-span-4">
         <h2 class="font-titulo text-linha font-bold uppercase leading-none">{contato.titulo}</h2>
-        <ul class="mt-6 space-y-3 text-lg">
+        <ul class="mt-6 text-lg md:space-y-3">
           <li><a class={classeLink} href={contato.email.href}>{contato.email.rotulo}</a></li>
           {contato.telefones.map((t) => <li><a class={classeLink} href={t.href}>{t.rotulo}</a></li>)}
           <li>
@@ -27,7 +27,7 @@ const classeLink = 'underline underline-offset-4 transition-colors hover:text-ve
       </div>
       <div class="md:col-span-4">
         <h2 class="font-titulo text-linha font-bold uppercase leading-none">{contato.redesTitulo}</h2>
-        <ul class="mt-6 space-y-3 text-lg">
+        <ul class="mt-6 text-lg md:space-y-3">
           {
             contato.redes.map((r) => (
               <li>
