@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 5 concluídas; a etapa 6 (design e acabamento) está feita e em PR, aguardando a sua aprovação visual; próxima é a etapa 7.
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 6 concluídas (a 6 incorporada pelo PR #8); efeito de rolagem da chamada em PR separado (branch `feature/etapa-6b-scroll`); próxima é a etapa 7.
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção.
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -34,6 +34,25 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **Pontos em aberto:** publicação pública (etapa 9 do plano). (A decisão sobre o git do `DIARIO.md` e do `CLAUDE.md` foi resolvida: os dois agora são versionados.)
 
 ---
+
+## 2026-11-01
+- **O que foi feito:** o PR #8 (etapa 6, design) foi incorporado à `main` depois da sua aprovação. Em seguida, numa branch nova (`feature/etapa-6b-scroll`), fiz o **efeito de rolagem "a folha que se abre"** na chamada principal: ao rolar, a chamada fica fixa na tela, a foto da equipe cresce saindo do recorte em folha até ocupar a tela inteira e o texto sobe e some. Depois a página segue normal.
+- **Decisões:**
+  - Feito **sem biblioteca** (sem GSAP): um script próprio de uns 100 linhas, dentro de `src/components/Chamada.astro`, lê a rolagem e anima. Motivo: o efeito é um só, e assim a página não ganha o peso de uma biblioteca. (Eu tinha dito que precisaria do GSAP; não precisou.)
+  - É um "extra": sem JavaScript, com "reduzir movimento" ligado, ou em tela baixa demais (celular deitado), a chamada fica estática, igual era antes. Testei os três casos.
+  - O início do efeito casa exatamente com a foto do hero (sem "salto"), em celular, tablet e computador. A foto de tela cheia só entra depois de carregada.
+  - A paralaxe leve que existia na foto foi retirada: o novo efeito a substitui.
+- **Problemas:**
+  - No celular o início do efeito mostrava a foto ampliada (só o miolo), porque a tela cheia vertical corta as laterais. Corrigido calculando o tamanho real da foto.
+  - **Efeito não aparecia no seu navegador:** a regra de segurança desligava o efeito sempre que o conteúdo da chamada (uns 860 px) era mais alto que a janela, e em notebooks a janela costuma ter 650 a 800 px. Corrigido: agora só exige que os **botões** caibam na tela (a foto pode ficar cortada embaixo). Liga em janelas a partir de uns 700 px de altura; abaixo disso (ex.: celular deitado) continua desligado de propósito.
+  - O inspetor da skill dá um aviso novo ("texto fixo passa sobre foto"): é o título que some justamente quando a foto o cobre. Defendido como intencional.
+- **Revisão de código (revisor independente):** nenhum crítico; 4 importantes, corrigidos: a barra de endereço do celular (muda só a altura) refazia as medidas no meio da rolagem e faria a página pular (agora só remede se a largura mudar); o teste de "cabe na tela" usava a altura errada no iPhone (agora usa a altura real do palco); a foto de tela cheia podia ficar borrada no celular em pé (`sizes` ajustado); e o texto alternativo da foto sumia para leitores de tela quando o efeito ligava (agora a camada nova leva o `alt`). Corrigidos também: divisão por zero se a foto não carregasse, download antecipado da foto grande, botões do hero saindo do teclado quando ficam invisíveis, e `requestAnimationFrame` duplicado.
+- **Estado atual:** a `main` está na etapa 6 (PR #8). O efeito de rolagem está no **PR #9, aberto e ainda não incorporado**, na branch `feature/etapa-6b-scroll` (tudo commitado e enviado ao GitHub; árvore de trabalho limpa). O efeito não aparecia em janelas baixas de notebook; foi corrigido (veja Problemas) e ainda **não foi confirmado por você no seu navegador**.
+- **Próximos passos:**
+  - Dizer "retomar projeto". Estando na branch `feature/etapa-6b-scroll`, rodar `npm run dev` e recarregar a página (Cmd+Shift+R) para ver o efeito. Se não aparecer, informar o navegador e a altura da janela, e conferir se "Reduzir movimento" está ligado no Mac (nesse caso o efeito não roda de propósito).
+  - Aprovar, ajustar (mais curto/longo, escurecimento da foto) ou descartar o efeito. Se aprovar, incorporar o PR #9 (`gh pr merge 9 --merge`) e voltar para a `main` (`git checkout main && git pull`).
+  - Conferir no celular de verdade (iPhone/Safari) porque só testei no Chrome do computador.
+  - Etapa 7 e pendências antigas continuam como estão na entrada de 2026-10-31.
 
 ## 2026-10-31
 - **O que foi feito:** criados o `CLAUDE.md` e o `DIARIO.md` na raiz do projeto. Definido o fluxo de trabalho entre sessões. Limpas as sessões antigas da pasta de histórico do Claude (a pasta `memory/` foi mantida). Repositório git iniciado (branch `main`), primeiro commit feito e projeto enviado ao GitHub em um repositório privado: `github.com/heliastorres/manocchio`.

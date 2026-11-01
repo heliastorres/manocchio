@@ -8,43 +8,248 @@ const { chamada } = conteudo;
 
 <!--
   Chamada principal: fundo preto, título grande e a foto da equipe recortada em FOLHA
-  (a forma do arco verde da logo). Uma folha verde lisa, maior, aparece atrás da foto
-  e é cortada pelo canto da tela.
+  (a forma do arco verde da logo).
+
+  EFEITO DE ROLAGEM ("a folha que se abre"): enquanto a página rola, a chamada fica fixa na tela e
+  a foto cresce, saindo do recorte em folha até ocupar a tela inteira. O texto some pelo caminho.
+  O efeito é um "extra": sem JavaScript, com "reduzir movimento" ligado ou em tela baixa demais,
+  a chamada fica estática, igual a antes (veja o script no fim deste arquivo).
 -->
-<section id={chamada.id} aria-labelledby="chamada-titulo" class="relative isolate overflow-hidden bg-preto text-branco">
-  <div
-    aria-hidden="true"
-    class="folha folha-entra absolute -bottom-[26vw] -right-[22vw] -z-10 aspect-square w-[78vw] bg-verde md:-bottom-[30vw] md:-right-[16vw] md:w-[62vw]"
-  >
-  </div>
-
-  <div class="mx-auto max-w-7xl px-4 pb-16 pt-24 md:px-8 md:pb-24 md:pt-28">
-    <h1
-      id="chamada-titulo"
-      data-revelar
-      class="font-titulo text-display font-bold uppercase leading-[0.95] tracking-[-0.02em] [text-wrap:balance]"
+<section id={chamada.id} aria-labelledby="chamada-titulo" class="relative isolate bg-preto text-branco" data-cena>
+  <div class="relative isolate overflow-hidden" data-palco>
+    <div
+      aria-hidden="true"
+      class="folha folha-entra absolute -bottom-[26vw] -right-[22vw] -z-10 aspect-square w-[78vw] bg-verde md:-bottom-[30vw] md:-right-[16vw] md:w-[62vw]"
     >
-      {chamada.titulo}
-    </h1>
+    </div>
 
-    <div class="mt-8 grid items-center gap-10 md:mt-10 md:grid-cols-12 md:gap-12">
-      <div class="md:col-span-5">
-        {chamada.texto.map((p) => <p data-revelar class="texto-corrido">{p}</p>)}
-        <div data-revelar class="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-          <Botao href={chamada.botaoPrincipal.href}>{chamada.botaoPrincipal.rotulo}</Botao>
-          <Botao href={chamada.botaoSecundario.href} variante="secundario">{chamada.botaoSecundario.rotulo}</Botao>
-        </div>
+    <!-- Camada da foto em tela cheia: só aparece quando o efeito está ligado (classe "cena-ativa") -->
+    <div data-cena-foto class="absolute inset-0 z-0 hidden">
+      <Foto
+        imagem={chamada.imagem}
+        widths={[1024, 1600, 2000]}
+        sizes="(max-width: 767px) 250vw, 100vw"
+        class="absolute left-0 top-0 max-w-none origin-top-left will-change-transform"
+      />
+      <div data-cena-escuro class="absolute inset-0 bg-preto opacity-0"></div>
+    </div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-4 pb-16 pt-24 md:px-8 md:pb-24 md:pt-28" data-cena-conteudo>
+      <div data-cena-texto>
+        <h1
+          id="chamada-titulo"
+          data-revelar
+          class="font-titulo text-display font-bold uppercase leading-[0.95] tracking-[-0.02em] [text-wrap:balance]"
+        >
+          {chamada.titulo}
+        </h1>
       </div>
 
-      <div class="md:col-span-7" data-paralaxe>
-        <Foto
-          imagem={chamada.imagem}
-          widths={[640, 1024, 1400]}
-          sizes="(min-width: 1280px) 720px, (min-width: 768px) 58vw, 100vw"
-          prioridade
-          class="folha aspect-[4/3] w-full object-cover object-top md:aspect-[16/10]"
-        />
+      <div class="mt-8 grid items-center gap-10 md:mt-10 md:grid-cols-12 md:gap-12">
+        <div class="md:col-span-5" data-cena-texto>
+          {chamada.texto.map((p) => <p data-revelar class="texto-corrido">{p}</p>)}
+          <div data-revelar class="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+            <Botao href={chamada.botaoPrincipal.href}>{chamada.botaoPrincipal.rotulo}</Botao>
+            <Botao href={chamada.botaoSecundario.href} variante="secundario">{chamada.botaoSecundario.rotulo}</Botao>
+          </div>
+        </div>
+
+        <!-- Foto em folha. Com o efeito ligado ela fica invisível (a camada acima assume), mas continua
+             ocupando o lugar, e o script mede a posição dela para saber de onde a foto começa a crescer. -->
+        <div class="md:col-span-7" data-cena-lugar>
+          <Foto
+            imagem={chamada.imagem}
+            widths={[640, 1024, 1400]}
+            sizes="(min-width: 1280px) 720px, (min-width: 768px) 58vw, 100vw"
+            prioridade
+            class="folha aspect-[4/3] w-full object-cover object-top md:aspect-[16/10]"
+          />
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<style is:global>
+  /* Efeito ligado: a chamada fica "grudada" (sticky) com a altura exata da tela */
+  [data-cena].cena-ativa [data-palco] {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
+  [data-cena].cena-ativa [data-cena-foto] {
+    display: block;
+  }
+  [data-cena].cena-ativa [data-cena-lugar] {
+    visibility: hidden;
+  }
+</style>
+
+<script>
+  // A FOLHA QUE SE ABRE. Passo a passo:
+  //  1. A seção ganha altura extra (o "trecho de rolagem" do efeito). Enquanto o visitante rola esse
+  //     trecho, a chamada fica presa no topo (position: sticky) e o progresso "p" vai de 0 a 1.
+  //  2. Em p = 0 a foto em tela cheia está recortada e encolhida exatamente em cima da foto em folha.
+  //  3. Conforme p cresce, o recorte abre (de folha para retângulo da tela) e a foto volta ao tamanho cheio.
+  //  4. O texto sobe e some, e a foto escurece um pouco para o texto continuar legível enquanto sai.
+  const secao = document.querySelector<HTMLElement>('[data-cena]');
+  const palco = secao?.querySelector<HTMLElement>('[data-palco]');
+  const camada = secao?.querySelector<HTMLElement>('[data-cena-foto]');
+  const imagem = camada?.querySelector<HTMLElement>('img');
+  const escuro = secao?.querySelector<HTMLElement>('[data-cena-escuro]');
+  const lugar = secao?.querySelector<HTMLElement>('[data-cena-lugar]');
+  const conteudoEl = secao?.querySelector<HTMLElement>('[data-cena-conteudo]');
+  const textos = secao ? Array.from(secao.querySelectorAll<HTMLElement>('[data-cena-texto]')) : [];
+  const links = secao ? Array.from(secao.querySelectorAll<HTMLElement>('[data-cena-texto] a')) : [];
+  const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const limitar = (v: number) => Math.min(1, Math.max(0, v));
+  const suavizar = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2); // acelera e freia
+
+  type Medidas = { W: number; H: number; x: number; y: number; w: number; h: number; escala: number; tx0: number; ty0: number; tx1: number; trecho: number };
+  let medidas: Medidas | null = null;
+  let alvo = 0; // progresso pedido pela rolagem
+  let atual = -1; // progresso mostrado (chega no alvo aos poucos: movimento mais macio)
+  let rodando = false;
+  let quadroId = 0;
+  let larguraMedida = 0; // largura da janela na última medição (para ignorar resize só de altura)
+
+  function aplicar(p: number) {
+    if (!medidas || !imagem || !camada || !escuro) return;
+    const { W, H, x, y, w, h, escala, tx0, ty0, tx1 } = medidas;
+    const q = suavizar(limitar(p / 0.8)); // 0 = folha pequena, 1 = tela cheia (termina em 80% do trecho)
+    const r = 1 - q;
+    camada.style.clipPath =
+      `inset(${y * r}px ${(W - x - w) * r}px ${(H - y - h) * r}px ${x * r}px ` +
+      `round ${(w / 2) * r}px 0px ${(w / 2) * r}px 0px / ${(h / 2) * r}px 0px ${(h / 2) * r}px 0px)`;
+    imagem.style.transform = `translate(${tx1 + (tx0 - tx1) * r}px, ${ty0 * r}px) scale(${1 + (escala - 1) * r})`;
+
+    const t = limitar(p / 0.35); // texto some nos primeiros 35%
+    textos.forEach((el) => {
+      el.style.opacity = String(1 - t);
+      el.style.transform = `translateY(${-60 * t}px)`;
+    });
+    // Os botões, depois de invisíveis, saem também da ordem do teclado (o título e o texto continuam para leitores de tela)
+    links.forEach((a) => {
+      a.style.visibility = t >= 1 ? 'hidden' : '';
+      if (t >= 1 && document.activeElement === a) a.blur();
+    });
+    escuro.style.opacity = String(0.45 * limitar(p / 0.35) - 0.25 * limitar((p - 0.7) / 0.3));
+  }
+
+  function quadro() {
+    atual += (alvo - atual) * 0.14;
+    if (Math.abs(alvo - atual) < 0.0008) atual = alvo;
+    aplicar(atual);
+    if (atual !== alvo) quadroId = requestAnimationFrame(quadro);
+    else rodando = false;
+  }
+
+  function aoRolar() {
+    if (!medidas || !secao) return;
+    alvo = limitar(-secao.getBoundingClientRect().top / medidas.trecho);
+    if (!rodando) {
+      rodando = true;
+      quadroId = requestAnimationFrame(quadro);
+    }
+  }
+
+  function desligar() {
+    window.removeEventListener('scroll', aoRolar);
+    cancelAnimationFrame(quadroId);
+    medidas = null;
+    rodando = false;
+    atual = -1;
+    if (!secao) return;
+    secao.classList.remove('cena-ativa');
+    secao.style.height = '';
+    camada?.style.removeProperty('clip-path');
+    ['width', 'height', 'transform'].forEach((prop) => imagem?.style.removeProperty(prop));
+    escuro?.style.removeProperty('opacity');
+    textos.forEach((el) => {
+      el.style.removeProperty('opacity');
+      el.style.removeProperty('transform');
+    });
+    links.forEach((a) => a.style.removeProperty('visibility'));
+  }
+
+  let versao = 0; // evita que uma chamada antiga de ligar() termine depois de uma mais nova
+
+  async function ligar() {
+    const minha = ++versao;
+    larguraMedida = window.innerWidth;
+    desligar();
+    const fotoLugar = lugar?.querySelector('img');
+    if (!secao || !palco || !camada || !imagem || !lugar || !conteudoEl || !fotoLugar || reduzir.matches) return;
+
+    // A foto de tela cheia fica escondida (display: none), então o navegador não a baixaria sozinho:
+    // pedimos agora (só aqui, quando o efeito vai mesmo ligar, para não competir com a foto do hero).
+    (imagem as HTMLImageElement).loading = 'eager';
+    // Ela precisa estar carregada antes de esconder a foto do hero (senão piscaria vazio)
+    try {
+      await (imagem as HTMLImageElement).decode();
+    } catch {
+      return; // não carregou: fica o hero estático
+    }
+    if (minha !== versao) return;
+
+    secao.classList.add('cena-ativa');
+    const W = palco.clientWidth;
+    const H = palco.clientHeight;
+    // O palco tem a altura da tela (100svh). Os botões precisam caber nela, senão o visitante não consegue
+    // clicar enquanto a chamada está fixa; nesse caso (ex.: celular deitado) desliga o efeito.
+    // A foto pode ficar cortada embaixo: ela é decorativa e o efeito a abre para a tela inteira.
+    const ultimoLink = links[links.length - 1];
+    if (ultimoLink && ultimoLink.getBoundingClientRect().bottom - palco.getBoundingClientRect().top > H - 16) {
+      desligar();
+      return;
+    }
+    const p = palco.getBoundingClientRect();
+    const f = lugar.getBoundingClientRect(); // pode passar da borda de baixo da tela: tudo bem
+    const x = f.left - p.left;
+    const y = f.top - p.top;
+    // Tamanho da foto "cobrindo" a tela inteira (como object-fit: cover), calculado em pixels
+    const nw = (imagem as HTMLImageElement).naturalWidth;
+    const nh = (imagem as HTMLImageElement).naturalHeight;
+    if (!nw || !nh) {
+      desligar();
+      return;
+    }
+    const k = Math.max(W / nw, H / nh);
+    const cw = nw * k;
+    const ch = nh * k;
+    imagem.style.width = `${cw}px`;
+    imagem.style.height = `${ch}px`;
+    // No início a foto precisa "cobrir" só a folha, do mesmo jeito que a foto do hero: escala menor
+    const escala = Math.max(f.width / cw, f.height / ch);
+    const trecho = H * 1.2; // quanto o visitante rola para abrir a folha
+    medidas = {
+      W, H, x, y, w: f.width, h: f.height, escala,
+      tx0: x + (f.width - cw * escala) / 2, // posição no início (alinhada à folha)
+      ty0: y, // no início o topo da foto fica no topo da folha (igual ao object-top do hero)
+      tx1: (W - cw) / 2, // posição no fim (centralizada na tela)
+      trecho,
+    };
+    secao.style.height = `${H + trecho}px`;
+    window.addEventListener('scroll', aoRolar, { passive: true });
+    atual = alvo = limitar(-secao.getBoundingClientRect().top / trecho);
+    aplicar(atual);
+  }
+
+  if (secao) {
+    // Espera fontes e imagens carregarem: elas mudam o tamanho e a posição do que vamos medir
+    const iniciar = () => document.fonts.ready.then(ligar);
+    if (document.readyState === 'complete') iniciar();
+    else window.addEventListener('load', iniciar);
+
+    let adiar: number | undefined;
+    window.addEventListener('resize', () => {
+      // No celular a barra de endereço aparece e some ao rolar e dispara "resize" só de altura:
+      // refazer as medidas no meio da rolagem faria a página pular. Só remede se a largura mudou.
+      if (window.innerWidth === larguraMedida) return;
+      window.clearTimeout(adiar);
+      adiar = window.setTimeout(ligar, 200);
+    });
+    reduzir.addEventListener('change', ligar);
+  }
+</script>
