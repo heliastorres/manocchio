@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 6 concluídas (a 7 está em andamento, ver 2026-11-02), incluindo os extras da 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 7 concluídas (a 7 pelo PR #13) e a 8 em andamento. Extras da etapa 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção. Desde o PR #10 o projeto também tem **React + Motion** (só para os ícones animados do `lucide-animated`).
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -35,7 +35,19 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 
 ---
 
-## 2026-11-02
+## 2026-11-01
+- **Etapa 8, SEO e desempenho (branch `feature/etapa-8-seo-desempenho`):**
+  - **SEO:** o título, a descrição e o `lang="pt-BR"` já existiam. Adicionei o Open Graph (prévia ao compartilhar o link no WhatsApp e redes), `twitter:card` e `theme-color`. A imagem da prévia (1200x630) é gerada pelo script `scripts/gerar-og.mjs` a partir da foto da equipe e fica em `public/og.jpg`. Estrutura de títulos conferida na etapa 7: um `h1` e um `h2` por seção.
+  - **Medido com o Lighthouse (Chrome) em build de produção:** celular desempenho 93, acessibilidade 100, boas práticas 100, SEO 100; computador 100, 100, 96 e 100. Antes das correções, o computador estava em 85, por causa de um salto de layout.
+  - **Correção do salto de layout (CLS 0,286 para 0,001):** a folha verde da chamada mudava de lugar quando o efeito de rolagem ligava, porque a altura da seção mudava. Agora a chamada já nasce com a altura da tela (`min-h-svh`), a mesma que o efeito usa. Conferi que o efeito liga e desliga nas mesmas alturas de janela de antes.
+  - **CSS embutido na página** (`build.inlineStylesheets: 'always'` no `astro.config.mjs`): tirou o arquivo de estilos de 18 KB que bloqueava a primeira exibição.
+  - **Peso:** 919 KB no celular e 661 KB no computador na primeira carga. Os 505 KB da foto em tela cheia do efeito de rolagem são a maior parte. Os ícones animados (uns 170 KB de JavaScript) **não entram na primeira carga**, porque só carregam quando você rola até eles (`client:visible`).
+  - **Contraste:** o Lighthouse apontou falhas de contraste na primeira medição (cinza claro sobre verde claro). Eram elementos capturados no meio da animação de entrada: nas três medições seguintes, inclusive com "reduzir movimento", não houve falha.
+- **Decisões (etapa 8):** o endereço canônico (`canonical`) e o `og:url` só aparecem quando o endereço final do site estiver definido em `site` no `astro.config.mjs`; hoje não existe, então a imagem da prévia usa o caminho relativo `/og.jpg`. Isso precisa ser feito na etapa 9, ao publicar.
+- **Em aberto (etapa 8):**
+  - O LCP no celular é de 3,2 s (medição simulada com internet lenta). É a foto do topo.
+  - O Lighthouse reclama que a foto em tela cheia do efeito é servida em resolução menor que a exibida (boas práticas 96 no computador). Resolver isso aumentaria o peso, então deixei assim.
+  - As páginas de teste `/teste-conteudo` e `/teste-identidade` ainda existem e precisam ser apagadas antes da entrega (etapa 9).
 - **O que foi feito:** etapa 7 (responsividade e acessibilidade), branch `feature/etapa-7-responsividade-acessibilidade`. Rodei uma auditoria automática no Chrome (largura de 320 a 1440 px, contraste, imagens, títulos, teclado, toque) e corrigi o que falhou: **área de toque pequena no celular**. Os links de contato e redes (21 px de altura), o "Saiba mais e inscreva-se" (28 px), o link da política e o botão "Aceitar" dos cookies agora têm 44 px de altura no celular. No computador o visual não mudou.
 - **Lista de conferência (RNF1 e RNF3):**
   - [x] Sem rolagem horizontal em 320, 360, 390, 414, 768, 1024, 1280 e 1440 px.
@@ -51,9 +63,8 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - [ ] **Não testado:** os ícones animados com o teclado em um navegador real (só medi que o foco aparece).
 - **Decisões:** corrigi só o que a medição mostrou como problema. Os links de contato no computador continuam com a altura de antes (a regra de 44 px vale só até a largura `md`).
 - **Problemas:** nenhum aberto. O teste automático de contraste ignora texto sobre foto, então esse caso ficou para conferência manual.
-- **Próximos passos:** aprovar e incorporar o PR da etapa 7. Depois, etapa 8 (SEO e desempenho: título, descrição, Open Graph, e medir o peso do JavaScript dos ícones). Continuam em aberto a decisão sobre a chamada em janelas baixas (efeito desliga abaixo de uns 710 px) e o teste no iPhone.
+- **Próximos passos:** aprovar e incorporar o PR da etapa 8. Depois, etapa 9 (entrega): apagar as páginas de teste, definir o endereço final (`site` no `astro.config.mjs`) e decidir sobre a publicação, que só acontece com a sua autorização. Continuam em aberto: a decisão sobre a chamada em janelas baixas (efeito desliga abaixo de uns 710 px) e o teste no iPhone.
 
-## 2026-11-01
 - **Ícones animados (PR #10, incorporado):** instalei o `lucide-animated` (o nome `lucid-animations` não existe no npm), junto com React, Motion e a integração `@astrojs/react`. Usei em dois lugares: setas das modalidades (Treinos) e pino de mapa no link de cada local (Locais). O componente `src/components/IconeAnimado.tsx` anima o ícone quando o **link inteiro** recebe mouse ou foco, e fica parado com "reduzir movimento".
   - **Decisão:** você escolheu manter os ícones animados mesmo sabendo do peso: o site passou a carregar uns 170 KB (comprimido) de JavaScript que antes não existiam (React 66 KB + ícones 100 KB), porque o pacote não deixa carregar só 2 ícones. A alternativa mais leve era fazer a animação em CSS puro.
   - **Ficaram de fora:** menu do celular (sem "passar o mouse" no toque), WhatsApp (perderia a logo da marca) e rodapé (não tem ícones de redes).
