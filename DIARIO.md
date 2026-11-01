@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 7 concluídas (a 7 pelo PR #13) e a 8 em andamento. Extras da etapa 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 8 concluídas (a 8 pelo PR #14) e a 9 (entrega) em andamento, só falta decidir a publicação. Extras da etapa 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção. Desde o PR #10 o projeto também tem **React + Motion** (só para os ícones animados do `lucide-animated`).
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -36,6 +36,11 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 ---
 
 ## 2026-11-01
+- **Etapa 9, entrega (branch `feature/etapa-9-entrega`):**
+  - **Feito:** apaguei as páginas de teste (`/teste-conteudo` e `/teste-identidade`). O build de produção gera uma só página (`index.html`, 5,7 MB com as imagens), sem erros. Uma instalação limpa (`git clone` + `npm ci` + `npm run build`) também passa, e os 18 testes passam.
+  - **Conferido:** todas as âncoras do menu têm destino na página; nenhum segredo no repositório (a busca só achou texto de instrução no `CLAUDE.md` e o nome de uma etapa no `PLANO.md`); `.env` fora do git.
+  - **Links externos:** Facebook, Instagram e YouTube respondem 200. **O domínio antigo `manocchiosports.com` não resolve:** deu erro de DNS (SERVFAIL) também num DNS público, enquanto sites de controle resolvem normalmente. O domínio está registrado até 2028, então o problema é de configuração do DNS dele, e não de vencimento. Sete links do protótipo apontam para páginas dele (modalidades, locais e política de privacidade). Também não consegui verificar o link encurtado `bit.ly/MTTNAT23` (o serviço bloqueia a consulta automática, deu 403) nem o link do WhatsApp.
+  - **Pendente: publicação.** Continua dependendo da sua autorização, porque publica o site na internet. Sem ela, o link só funciona no seu computador (`npm run dev`, porta 4321). Ao publicar, falta definir o endereço final em `site` no `astro.config.mjs`, para o `canonical` e a imagem da prévia (Open Graph) saírem com endereço completo.
 - **Etapa 8, SEO e desempenho (branch `feature/etapa-8-seo-desempenho`):**
   - **SEO:** o título, a descrição e o `lang="pt-BR"` já existiam. Adicionei o Open Graph (prévia ao compartilhar o link no WhatsApp e redes), `twitter:card` e `theme-color`. A imagem da prévia (1200x630) é gerada pelo script `scripts/gerar-og.mjs` a partir da foto da equipe e fica em `public/og.jpg`. Estrutura de títulos conferida na etapa 7: um `h1` e um `h2` por seção.
   - **Medido com o Lighthouse (Chrome) em build de produção:** celular desempenho 93, acessibilidade 100, boas práticas 100, SEO 100; computador 100, 100, 96 e 100. Antes das correções, o computador estava em 85, por causa de um salto de layout.
@@ -63,7 +68,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - [ ] **Não testado:** os ícones animados com o teclado em um navegador real (só medi que o foco aparece).
 - **Decisões:** corrigi só o que a medição mostrou como problema. Os links de contato no computador continuam com a altura de antes (a regra de 44 px vale só até a largura `md`).
 - **Problemas:** nenhum aberto. O teste automático de contraste ignora texto sobre foto, então esse caso ficou para conferência manual.
-- **Próximos passos:** aprovar e incorporar o PR da etapa 8. Depois, etapa 9 (entrega): apagar as páginas de teste, definir o endereço final (`site` no `astro.config.mjs`) e decidir sobre a publicação, que só acontece com a sua autorização. Continuam em aberto: a decisão sobre a chamada em janelas baixas (efeito desliga abaixo de uns 710 px) e o teste no iPhone.
+- **Próximos passos:** aprovar e incorporar o PR da etapa 9. Decidir sobre a publicação (ex.: Netlify ou Cloudflare Pages) e, se for publicar, definir o endereço final. Confirmar com o cliente o que acontece com os links do site antigo, que hoje não abre. Continuam em aberto: a decisão sobre a chamada em janelas baixas (efeito desliga abaixo de uns 710 px) e o teste no iPhone.
 
 - **Ícones animados (PR #10, incorporado):** instalei o `lucide-animated` (o nome `lucid-animations` não existe no npm), junto com React, Motion e a integração `@astrojs/react`. Usei em dois lugares: setas das modalidades (Treinos) e pino de mapa no link de cada local (Locais). O componente `src/components/IconeAnimado.tsx` anima o ícone quando o **link inteiro** recebe mouse ou foco, e fica parado com "reduzir movimento".
   - **Decisão:** você escolheu manter os ícones animados mesmo sabendo do peso: o site passou a carregar uns 170 KB (comprimido) de JavaScript que antes não existiam (React 66 KB + ícones 100 KB), porque o pacote não deixa carregar só 2 ícones. A alternativa mais leve era fazer a animação em CSS puro.
