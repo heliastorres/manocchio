@@ -19,9 +19,9 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 6 concluídas (a 6 incorporada pelo PR #8); efeito de rolagem da chamada em PR separado (branch `feature/etapa-6b-scroll`); próxima é a etapa 7.
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 6 concluídas, incluindo os extras da 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
 - **Decisões confirmadas:**
-  - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção.
+  - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção. Desde o PR #10 o projeto também tem **React + Motion** (só para os ícones animados do `lucide-animated`).
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
   - Seções da home incluídas no MVP: as 12 seções listadas no levantamento acima.
   - Conteúdo: mesmas frases do site atual (inspiradas), mesmas logos, paleta e fotos. As fotos podem ser tratadas para ficar mais profissionais.
@@ -36,11 +36,11 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 ---
 
 ## 2026-11-01
-- **Ícones animados (branch `feature/etapa-6d-icones`):** instalei o `lucide-animated` (o nome `lucid-animations` não existe no npm), junto com React, Motion e a integração `@astrojs/react`. Usei em dois lugares: setas das modalidades (Treinos) e pino de mapa no link de cada local (Locais). O componente `src/components/IconeAnimado.tsx` anima o ícone quando o **link inteiro** recebe mouse ou foco, e fica parado com "reduzir movimento".
+- **Ícones animados (PR #10, incorporado):** instalei o `lucide-animated` (o nome `lucid-animations` não existe no npm), junto com React, Motion e a integração `@astrojs/react`. Usei em dois lugares: setas das modalidades (Treinos) e pino de mapa no link de cada local (Locais). O componente `src/components/IconeAnimado.tsx` anima o ícone quando o **link inteiro** recebe mouse ou foco, e fica parado com "reduzir movimento".
   - **Decisão:** você escolheu manter os ícones animados mesmo sabendo do peso: o site passou a carregar uns 170 KB (comprimido) de JavaScript que antes não existiam (React 66 KB + ícones 100 KB), porque o pacote não deixa carregar só 2 ícones. A alternativa mais leve era fazer a animação em CSS puro.
   - **Ficaram de fora:** menu do celular (sem "passar o mouse" no toque), WhatsApp (perderia a logo da marca) e rodapé (não tem ícones de redes).
   - **Testado no Chrome:** sem erros no console; a seta e o pino animam ao passar o mouse. **Não testado:** celular e teclado.
-- **Paralaxe na foto de Resultados (branch `feature/etapa-6c-paralaxe`, commitada, sem PR ainda):** a foto desliza dentro da moldura em folha. Você achou fraca, então subi a escala de 1,2 para 1,4 (a constante `ESCALA` em `Resultados.astro`). O valor 1,4 já está no commit dessa branch.
+- **Paralaxe na foto de Resultados (PR #11, incorporado):** a foto desliza dentro da moldura em folha. Você achou fraca, então subi a escala de 1,2 para 1,4 (a constante `ESCALA` em `Resultados.astro`). O valor 1,4 já está no commit dessa branch.
 - **Por que o efeito da chamada "sumia":** não era erro de código. O efeito desliga de propósito quando a janela tem menos de uns 710 px de altura (os botões precisam caber). O DevTools aberto embaixo, o zoom ou a barra de favoritos baixam a altura. Também só mede ao carregar a página, então é preciso recarregar depois de mudar a janela. Melhorias possíveis (ainda não feitas): compactar a chamada em janelas baixas e remedir ao mudar a altura no computador.
 - **Atenção com servidores locais:** o link público que você usou estava desatualizado porque serve um build antigo (`astro preview`, porta 4399). Para ver as mudanças ao vivo, use o `npm run dev` (porta 4321).
 - **O que foi feito:** o PR #8 (etapa 6, design) foi incorporado à `main` depois da sua aprovação. Em seguida, numa branch nova (`feature/etapa-6b-scroll`), fiz o **efeito de rolagem "a folha que se abre"** na chamada principal: ao rolar, a chamada fica fixa na tela, a foto da equipe cresce saindo do recorte em folha até ocupar a tela inteira e o texto sobe e some. Depois a página segue normal.
@@ -54,12 +54,14 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - **Efeito não aparecia no seu navegador:** a regra de segurança desligava o efeito sempre que o conteúdo da chamada (uns 860 px) era mais alto que a janela, e em notebooks a janela costuma ter 650 a 800 px. Corrigido: agora só exige que os **botões** caibam na tela (a foto pode ficar cortada embaixo). Liga em janelas a partir de uns 700 px de altura; abaixo disso (ex.: celular deitado) continua desligado de propósito.
   - O inspetor da skill dá um aviso novo ("texto fixo passa sobre foto"): é o título que some justamente quando a foto o cobre. Defendido como intencional.
 - **Revisão de código (revisor independente):** nenhum crítico; 4 importantes, corrigidos: a barra de endereço do celular (muda só a altura) refazia as medidas no meio da rolagem e faria a página pular (agora só remede se a largura mudar); o teste de "cabe na tela" usava a altura errada no iPhone (agora usa a altura real do palco); a foto de tela cheia podia ficar borrada no celular em pé (`sizes` ajustado); e o texto alternativo da foto sumia para leitores de tela quando o efeito ligava (agora a camada nova leva o `alt`). Corrigidos também: divisão por zero se a foto não carregasse, download antecipado da foto grande, botões do hero saindo do teclado quando ficam invisíveis, e `requestAnimationFrame` duplicado.
-- **Estado atual:** a `main` está na etapa 6 (PR #8). O efeito de rolagem está no **PR #9, aberto e ainda não incorporado**, na branch `feature/etapa-6b-scroll` (tudo commitado e enviado ao GitHub; árvore de trabalho limpa). O efeito não aparecia em janelas baixas de notebook; foi corrigido (veja Problemas) e ainda **não foi confirmado por você no seu navegador**.
+- **Estado atual:** a `main` tem tudo da etapa 6: design (PR #8), efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe (PR #11). Você aprovou os efeitos no localhost. O build passa. Não há PR aberto além deste do diário.
 - **Próximos passos:**
-  - Dizer "retomar projeto". Estando na branch `feature/etapa-6b-scroll`, rodar `npm run dev` e recarregar a página (Cmd+Shift+R) para ver o efeito. Se não aparecer, informar o navegador e a altura da janela, e conferir se "Reduzir movimento" está ligado no Mac (nesse caso o efeito não roda de propósito).
-  - Aprovar, ajustar (mais curto/longo, escurecimento da foto) ou descartar o efeito. Se aprovar, incorporar o PR #9 (`gh pr merge 9 --merge`) e voltar para a `main` (`git checkout main && git pull`).
-  - Conferir no celular de verdade (iPhone/Safari) porque só testei no Chrome do computador.
-  - Etapa 7 e pendências antigas continuam como estão na entrada de 2026-10-31.
+  - Dizer "retomar projeto" na sessão nova.
+  - **Etapa 7 (responsividade e acessibilidade):** é a próxima do `PLANO.md`. Inclui conferir no **celular de verdade** (iPhone/Safari), porque só testei no Chrome do computador, e testar os ícones e efeitos com o **teclado**.
+  - **Decidir sobre o peso do JavaScript:** os ícones animados somam uns 170 KB (comprimido). Se a etapa 8 (desempenho) reclamar, a alternativa é trocar por ícones Lucide com animação em CSS e desinstalar React e Motion.
+  - **Decidir sobre a chamada em janelas baixas** (menos de uns 710 px de altura o efeito desliga de propósito): compactar a chamada para o efeito ligar em janelas de uns 600 px e remedir ao mudar só a altura no computador. Ainda não feito.
+  - Para ver as mudanças ao vivo, use `npm run dev` (porta 4321), não o `astro preview` da porta 4399 (build antigo).
+  - Pendências antigas continuam como estão na entrada de 2026-10-31.
 
 ## 2026-10-31
 - **O que foi feito:** criados o `CLAUDE.md` e o `DIARIO.md` na raiz do projeto. Definido o fluxo de trabalho entre sessões. Limpas as sessões antigas da pasta de histórico do Claude (a pasta `memory/` foi mantida). Repositório git iniciado (branch `main`), primeiro commit feito e projeto enviado ao GitHub em um repositório privado: `github.com/heliastorres/manocchio`.
