@@ -2,6 +2,8 @@
 import { conteudo } from '../data/conteudo';
 
 const { contato, rodape, site } = conteudo;
+// Arquivos da pasta public/ ficam dentro da subpasta do site (base), então o caminho leva ela na frente
+const raiz = import.meta.env.BASE_URL.replace(/\/$/, '');
 const classeLink = 'inline-flex min-h-11 items-center underline underline-offset-4 transition-colors hover:text-verde focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-branco md:min-h-0';
 ---
 
@@ -10,7 +12,7 @@ const classeLink = 'inline-flex min-h-11 items-center underline underline-offset
   <div class="mx-auto max-w-7xl px-4 pb-8 pt-20 md:px-8 md:pt-28">
     <div class="grid gap-12 md:grid-cols-12 md:gap-16">
       <div class="md:col-span-4">
-        <img src="/logos/logo-branca.png" alt={site.nome} width="150" height="141" class="h-24 w-auto" loading="lazy" />
+        <img src={`${raiz}/logos/logo-branca.png`} alt={site.nome} width="150" height="141" class="h-24 w-auto" loading="lazy" />
         <p class="mt-6 text-lg">{contato.endereco}</p>
       </div>
       <div class="md:col-span-4">

@@ -19,7 +19,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 - **O que é:** repaginação e reestruturação do site de um possível cliente, que hoje está desatualizado. A identidade visual atual deve ser mantida, e as cores finais devem ser fiéis às que serão usadas.
 - **Tipo de entrega:** protótipo (MVP) para apresentar ao possível cliente.
 - **Problema que resolve:** o cliente está insatisfeito com a página atual, que está obsoleta.
-- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 8 concluídas (a 8 pelo PR #14) e a 9 (entrega) em andamento, só falta decidir a publicação. Extras da etapa 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
+- **Fase atual:** escopo, requisitos e plano prontos. Etapas 1 a 8 concluídas (a 8 pelo PR #14) e a 9 (entrega, PR #15) incorporada; a publicação no GitHub Pages está pronta no código e falta ligar o Pages. Extras da etapa 6: efeito de rolagem da chamada (PR #9), ícones animados (PR #10) e paralaxe em Resultados (PR #11), todos já na `main`. Próxima é a etapa 7.
 - **Decisões confirmadas:**
   - Tecnologia: **Astro + Tailwind CSS**, pensando em crescer até produção. Desde o PR #10 o projeto também tem **React + Motion** (só para os ícones animados do `lucide-animated`).
   - MVP: **apenas a página inicial**. As outras páginas do site atual servem de referência, mas não entram no protótipo.
@@ -36,6 +36,12 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 ---
 
 ## 2026-11-01
+- **Publicação no GitHub Pages (branch `feature/publicacao-github-pages`):**
+  - **Contexto:** você deixou o repositório **público** e escolheu o GitHub Pages. Antes, busquei segredos em todo o histórico (47 commits): nenhum segredo e nenhum `.env` (a única linha achada é o texto de instrução do `CLAUDE.md`). **Aviso:** 33 commits têm o seu e-mail pessoal do Gmail, agora visível no GitHub; tirar exigiria reescrever o histórico, então ficou como está.
+  - **Endereço futuro:** `https://heliastorres.github.io/manocchio/`. No `astro.config.mjs` entraram `site: 'https://heliastorres.github.io'` e `base: '/manocchio'`. Por causa da subpasta, corrigi 5 caminhos que começavam com `/` (duas logos, dois ícones da aba e a imagem de prévia): agora usam `import.meta.env.BASE_URL`. O `canonical` e o `og:url` passaram a sair com o endereço completo.
+  - **Publicação automática:** `.github/workflows/deploy.yml`. A cada merge na `main`, o GitHub roda os testes, o build e publica a pasta `dist/`. Também dá para rodar na mão pela aba Actions.
+  - **Testado:** simulei o site na subpasta `/manocchio/` no Chrome: nenhuma requisição com erro, nenhuma imagem quebrada, fonte carregada, efeito da chamada ligado, 8 de 8 ícones animados ativados e sem erro no console. O fluxo do GitHub (`deploy.yml`) **não foi rodado ainda**, só será testado no primeiro merge.
+  - **Falta (precisa da sua autorização):** ligar o GitHub Pages em *Settings, Pages, Source: GitHub Actions*. Sem isso, o robô falha no passo de publicar. Depois do merge, conferir o link real.
 - **Etapa 9, entrega (branch `feature/etapa-9-entrega`):**
   - **Feito:** apaguei as páginas de teste (`/teste-conteudo` e `/teste-identidade`). O build de produção gera uma só página (`index.html`, 5,7 MB com as imagens), sem erros. Uma instalação limpa (`git clone` + `npm ci` + `npm run build`) também passa, e os 18 testes passam.
   - **Conferido:** todas as âncoras do menu têm destino na página; nenhum segredo no repositório (a busca só achou texto de instrução no `CLAUDE.md` e o nome de uma etapa no `PLANO.md`); `.env` fora do git.
@@ -68,7 +74,7 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
   - [ ] **Não testado:** os ícones animados com o teclado em um navegador real (só medi que o foco aparece).
 - **Decisões:** corrigi só o que a medição mostrou como problema. Os links de contato no computador continuam com a altura de antes (a regra de 44 px vale só até a largura `md`).
 - **Problemas:** nenhum aberto. O teste automático de contraste ignora texto sobre foto, então esse caso ficou para conferência manual.
-- **Próximos passos:** aprovar e incorporar o PR da etapa 9. Decidir sobre a publicação (ex.: Netlify ou Cloudflare Pages) e, se for publicar, definir o endereço final. Confirmar com o cliente o que acontece com os links do site antigo, que hoje não abre. Continuam em aberto: a decisão sobre a chamada em janelas baixas (efeito desliga abaixo de uns 710 px) e o teste no iPhone.
+- **Próximos passos:** aprovar o PR da publicação, ligar o GitHub Pages (*Settings, Pages, Source: GitHub Actions*), fazer o merge e abrir `https://heliastorres.github.io/manocchio/` para conferir (imagens, fontes, ícones, links). Confirmar com o cliente o que acontece com os links do site antigo (`manocchiosports.com`), que hoje não abre. Continuam em aberto: a decisão sobre a chamada em janelas baixas (efeito desliga abaixo de uns 710 px) e o teste no iPhone.
 
 - **Ícones animados (PR #10, incorporado):** instalei o `lucide-animated` (o nome `lucid-animations` não existe no npm), junto com React, Motion e a integração `@astrojs/react`. Usei em dois lugares: setas das modalidades (Treinos) e pino de mapa no link de cada local (Locais). O componente `src/components/IconeAnimado.tsx` anima o ícone quando o **link inteiro** recebe mouse ou foco, e fica parado com "reduzir movimento".
   - **Decisão:** você escolheu manter os ícones animados mesmo sabendo do peso: o site passou a carregar uns 170 KB (comprimido) de JavaScript que antes não existiam (React 66 KB + ícones 100 KB), porque o pacote não deixa carregar só 2 ícones. A alternativa mais leve era fazer a animação em CSS puro.
