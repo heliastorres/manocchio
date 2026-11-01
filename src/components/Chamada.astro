@@ -181,8 +181,6 @@ const { chamada } = conteudo;
     desligar();
     const fotoLugar = lugar?.querySelector('img');
     if (!secao || !palco || !camada || !imagem || !lugar || !conteudoEl || !fotoLugar || reduzir.matches) return;
-    // Tela baixa demais (ex.: celular deitado): o conteúdo não cabe numa tela, então não liga o efeito
-    if (conteudoEl.offsetHeight > window.innerHeight) return;
 
     // A foto de tela cheia fica escondida (display: none), então o navegador não a baixaria sozinho:
     // pedimos agora (só aqui, quando o efeito vai mesmo ligar, para não competir com a foto do hero).
@@ -198,14 +196,16 @@ const { chamada } = conteudo;
     secao.classList.add('cena-ativa');
     const W = palco.clientWidth;
     const H = palco.clientHeight;
-    // O palco usa 100svh (pode ser menor que innerHeight em celular com a barra de endereço visível):
-    // se o conteúdo não couber nele, desliga em vez de cortar os botões
-    if (conteudoEl.offsetHeight > H) {
+    // O palco tem a altura da tela (100svh). Os botões precisam caber nela, senão o visitante não consegue
+    // clicar enquanto a chamada está fixa; nesse caso (ex.: celular deitado) desliga o efeito.
+    // A foto pode ficar cortada embaixo: ela é decorativa e o efeito a abre para a tela inteira.
+    const ultimoLink = links[links.length - 1];
+    if (ultimoLink && ultimoLink.getBoundingClientRect().bottom - palco.getBoundingClientRect().top > H - 16) {
       desligar();
       return;
     }
     const p = palco.getBoundingClientRect();
-    const f = lugar.getBoundingClientRect();
+    const f = lugar.getBoundingClientRect(); // pode passar da borda de baixo da tela: tudo bem
     const x = f.left - p.left;
     const y = f.top - p.top;
     // Tamanho da foto "cobrindo" a tela inteira (como object-fit: cover), calculado em pixels
