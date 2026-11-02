@@ -7,12 +7,15 @@
 const CAMADAS = [0.5, 1, 2, 4, 8, 12]; // desfoque (px) de cada camada, da mais suave à mais forte
 const PASSO = 14; // quanto (em %) cada degradê avança
 
-// Máscara de uma camada: some -> aparece -> fica cheia -> some. A última não some (vai até a borda).
+// Máscara de uma camada: some -> aparece -> fica cheia -> some.
+// A última camada NÃO some no fim: fica cheia até a borda, senão sobra uma fresta sem desfoque.
 function mascara(i: number) {
   const p0 = i * PASSO;
   const p1 = Math.min(p0 + PASSO, 100);
-  const p2 = Math.min(p1 + PASSO, 100);
-  const p3 = Math.min(p2 + PASSO, 100);
+  const ultima = i === CAMADAS.length - 1;
+  if (ultima) return `linear-gradient(to bottom, rgb(0 0 0 / 0) ${p0}%, #000 ${p1}%, #000 100%)`;
+  const p2 = p1 + PASSO;
+  const p3 = p2 + PASSO;
   return `linear-gradient(to bottom, rgb(0 0 0 / 0) ${p0}%, #000 ${p1}%, #000 ${p2}%, rgb(0 0 0 / 0) ${p3}%)`;
 }
 ---

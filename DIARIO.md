@@ -36,12 +36,12 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 ---
 
 ## 2026-11-02
-- **O que foi feito:** efeito de **blur progressivo** na borda de baixo da janela, inspirado em um site de referência. Novo componente `src/components/BlurProgressivo.astro`: uma faixa fixa (6 rem) que desfoca o conteúdo que passa por baixo, com o desfoque crescendo aos poucos em direção à borda. O rodapé ganhou um espaço extra embaixo para o último texto não ficar sob o desfoque. Também aumentei o cabeçalho (de 64 para 80 px) e a logo (de 48 para 64 px).
+- **O que foi feito:** efeito de **blur progressivo** na borda de baixo da janela, inspirado em um site de referência. Novo componente `src/components/BlurProgressivo.astro`: uma faixa fixa (6 rem) que desfoca o conteúdo que passa por baixo, com o desfoque crescendo aos poucos em direção à borda. O rodapé ganhou um espaço extra embaixo para o último texto não ficar sob o desfoque. Também aumentei o cabeçalho (de 64 para 80 px) e a logo (de 48 para 72 px; depois do primeiro ajuste, a logo cresceu de novo sem mexer na altura do cabeçalho).
 - **Decisões:**
   - O efeito usa 6 camadas empilhadas, cada uma com desfoque maior e uma máscara em degradê. Uma camada só pareceria um vidro fosco comum.
   - Tinha também uma faixa de desfoque no topo, mas a Helias pediu para tirar: só a de baixo ficou.
   - Camadas ficam abaixo do cabeçalho, do banner de cookies e do botão do WhatsApp, e não bloqueiam cliques.
-- **Problemas:** havia um servidor de prévia antigo rodando e servindo o endereço errado; encerrei e subi outro. Conferi no Chrome (computador e celular simulado), com rolagem real. Ainda não testado em Safari/iPhone de verdade (o efeito usa `-webkit-` por precaução).
+- **Problemas:** o desfoque deixava uma fresta fina sem efeito na borda de baixo, porque a máscara da última camada voltava a sumir nos últimos 2% da altura; corrigido para ela ficar cheia até a borda. Além disso, havia um servidor de prévia antigo rodando e servindo o endereço errado; encerrei e subi outro. Conferi no Chrome (computador e celular simulado), com rolagem real. Ainda não testado em Safari/iPhone de verdade (o efeito usa `-webkit-` por precaução).
 - **Próximos passos:** olhar o efeito no iPhone; O arquivo `image.png` (print de referência) está na raiz e não foi versionado.
 
 ## 2026-11-01
