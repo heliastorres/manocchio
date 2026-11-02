@@ -13,9 +13,9 @@ const raiz = import.meta.env.BASE_URL.replace(/\/$/, '');
   Sem JavaScript ele já nasce em vidro (a classe "no-topo" só é colocada pelo script).
 -->
 <header id="cabecalho" class="cabecalho fixed inset-x-0 top-0 z-50 text-branco">
-  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-8">
+  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 md:px-8">
     <a href={cabecalho.logo.href} aria-label={cabecalho.logo.alt} class="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-branco">
-      <img src={`${raiz}/logos/logo-branca.png`} alt="" width="150" height="141" class="h-12 w-auto" />
+      <img src={`${raiz}/logos/logo-branca.png`} alt="" width="150" height="141" class="h-16 w-auto" />
     </a>
 
     <nav aria-label={acessibilidade.menuPrincipal} class="hidden lg:block">
@@ -58,7 +58,7 @@ const raiz = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
   </div>
 
-  <nav id="menu-movel" aria-label={acessibilidade.menuPrincipal} hidden class="max-h-[calc(100dvh-4rem)] overflow-y-auto lg:hidden">
+  <nav id="menu-movel" aria-label={acessibilidade.menuPrincipal} hidden class="max-h-[calc(100dvh-5rem)] overflow-y-auto lg:hidden">
     <ul class="mx-auto max-w-7xl px-4 pb-4 pt-2 md:px-8">
       {
         cabecalho.menu.map((item) => (

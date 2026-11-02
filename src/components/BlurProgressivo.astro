@@ -1,5 +1,5 @@
 ---
-// BLUR PROGRESSIVO: faixas fixas nas bordas da janela que desfocam o que passa por baixo,
+// BLUR PROGRESSIVO: faixa fixa na borda de baixo da janela que desfoca o que passa por baixo,
 // com o desfoque crescendo aos poucos em direção à borda (sem linha dura).
 // Truque: várias camadas empilhadas; cada uma tem um desfoque maior e uma máscara em degradê
 // que cobre só um pedaço da faixa. Juntas, parecem um desfoque que cresce de forma contínua.
@@ -8,26 +8,22 @@ const CAMADAS = [0.5, 1, 2, 4, 8, 12]; // desfoque (px) de cada camada, da mais 
 const PASSO = 14; // quanto (em %) cada degradê avança
 
 // Máscara de uma camada: some -> aparece -> fica cheia -> some. A última não some (vai até a borda).
-function mascara(i: number, direcao: 'to top' | 'to bottom') {
+function mascara(i: number) {
   const p0 = i * PASSO;
   const p1 = Math.min(p0 + PASSO, 100);
   const p2 = Math.min(p1 + PASSO, 100);
   const p3 = Math.min(p2 + PASSO, 100);
-  return `linear-gradient(${direcao}, rgb(0 0 0 / 0) ${p0}%, #000 ${p1}%, #000 ${p2}%, rgb(0 0 0 / 0) ${p3}%)`;
+  return `linear-gradient(to bottom, rgb(0 0 0 / 0) ${p0}%, #000 ${p1}%, #000 ${p2}%, rgb(0 0 0 / 0) ${p3}%)`;
 }
 ---
 
 <!-- Aria-hidden: é só efeito visual. pointer-events: none (no CSS) deixa clicar no que está por baixo. -->
-<div id="blur-topo" class="blur-progressivo blur-topo" aria-hidden="true">
-  {CAMADAS.map((b, i) => <div class="camada" style={`--b:${b}px; --mascara:${mascara(i, 'to top')}`} />)}
-</div>
 <div class="blur-progressivo blur-base" aria-hidden="true">
-  {CAMADAS.map((b, i) => <div class="camada" style={`--b:${b}px; --mascara:${mascara(i, 'to bottom')}`} />)}
+  {CAMADAS.map((b, i) => <div class="camada" style={`--b:${b}px; --mascara:${mascara(i)}`} />)}
 </div>
 
 <style is:global>
   :root {
-    --altura-blur-topo: 3.5rem;
     --altura-blur-base: 6rem;
   }
   .blur-progressivo {
@@ -35,12 +31,6 @@ function mascara(i: number, direcao: 'to top' | 'to bottom') {
     inset-inline: 0;
     z-index: 40; /* abaixo do cabeçalho (50), do banner (50) e do botão do WhatsApp (55) */
     pointer-events: none;
-  }
-  /* A faixa de cima começa onde o cabeçalho (4rem) termina e se perde para baixo */
-  .blur-topo {
-    --vidro: 1;
-    top: 4rem;
-    height: var(--altura-blur-topo);
   }
   .blur-base {
     bottom: 0;
@@ -54,32 +44,5 @@ function mascara(i: number, direcao: 'to top' | 'to bottom') {
     -webkit-mask-image: var(--mascara);
     mask-image: var(--mascara);
   }
-  /* Faixa de cima: no topo da página o desfoque é zero (a chamada fica nítida) e cresce com a rolagem */
-  .blur-topo .camada {
-    -webkit-backdrop-filter: blur(calc(var(--b) * var(--vidro)));
-    backdrop-filter: blur(calc(var(--b) * var(--vidro)));
-  }
 </style>
 
-<script>
-  // Mesma regra do cabeçalho: 0 no topo da página, 1 depois de 160px de rolagem
-  const topo = document.getElementById('blur-topo');
-  if (topo) {
-    let esperando = false;
-    const atualizar = () => {
-      topo.style.setProperty('--vidro', Math.min(window.scrollY / 160, 1).toFixed(2));
-      esperando = false;
-    };
-    atualizar();
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (!esperando) {
-          esperando = true;
-          requestAnimationFrame(atualizar);
-        }
-      },
-      { passive: true },
-    );
-  }
-</script>
