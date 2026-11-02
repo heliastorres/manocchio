@@ -1,0 +1,51 @@
+---
+// BLUR PROGRESSIVO: faixa fixa na borda de baixo da janela que desfoca o que passa por baixo,
+// com o desfoque crescendo aos poucos em direção à borda (sem linha dura).
+// Truque: várias camadas empilhadas; cada uma tem um desfoque maior e uma máscara em degradê
+// que cobre só um pedaço da faixa. Juntas, parecem um desfoque que cresce de forma contínua.
+
+const CAMADAS = [0.5, 1, 2, 4, 8, 12]; // desfoque (px) de cada camada, da mais suave à mais forte
+const PASSO = 14; // quanto (em %) cada degradê avança
+
+// Máscara de uma camada: some -> aparece -> fica cheia -> some.
+// A última camada NÃO some no fim: fica cheia até a borda, senão sobra uma fresta sem desfoque.
+function mascara(i: number) {
+  const p0 = i * PASSO;
+  const p1 = Math.min(p0 + PASSO, 100);
+  const ultima = i === CAMADAS.length - 1;
+  if (ultima) return `linear-gradient(to bottom, rgb(0 0 0 / 0) ${p0}%, #000 ${p1}%, #000 100%)`;
+  const p2 = p1 + PASSO;
+  const p3 = p2 + PASSO;
+  return `linear-gradient(to bottom, rgb(0 0 0 / 0) ${p0}%, #000 ${p1}%, #000 ${p2}%, rgb(0 0 0 / 0) ${p3}%)`;
+}
+---
+
+<!-- Aria-hidden: é só efeito visual. pointer-events: none (no CSS) deixa clicar no que está por baixo. -->
+<div class="blur-progressivo blur-base" aria-hidden="true">
+  {CAMADAS.map((b, i) => <div class="camada" style={`--b:${b}px; --mascara:${mascara(i)}`} />)}
+</div>
+
+<style is:global>
+  :root {
+    --altura-blur-base: 6rem;
+  }
+  .blur-progressivo {
+    position: fixed;
+    inset-inline: 0;
+    z-index: 40; /* abaixo do cabeçalho (50), do banner (50) e do botão do WhatsApp (55) */
+    pointer-events: none;
+  }
+  .blur-base {
+    bottom: 0;
+    height: var(--altura-blur-base);
+  }
+  .blur-progressivo .camada {
+    position: absolute;
+    inset: 0;
+    -webkit-backdrop-filter: blur(var(--b));
+    backdrop-filter: blur(var(--b));
+    -webkit-mask-image: var(--mascara);
+    mask-image: var(--mascara);
+  }
+</style>
+
