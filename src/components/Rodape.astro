@@ -9,7 +9,7 @@ const classeLink = 'inline-flex min-h-11 items-center underline underline-offset
 
 <!-- Rodapé: o nome da marca volta em largura total (escrito com texto, não é imagem) -->
 <footer id={contato.id} aria-label={rodape.rotuloAcessibilidade} class="overflow-hidden bg-preto text-branco">
-  <div class="mx-auto max-w-7xl px-4 pb-8 pt-20 md:px-8 md:pt-28">
+  <div class="mx-auto max-w-7xl px-4 pb-[calc(2rem+var(--altura-blur-base))] pt-20 md:px-8 md:pt-28">
     <div class="grid gap-12 md:grid-cols-12 md:gap-16">
       <div class="md:col-span-4">
         <img src={`${raiz}/logos/logo-branca.png`} alt={site.nome} width="150" height="141" class="h-24 w-auto" loading="lazy" />

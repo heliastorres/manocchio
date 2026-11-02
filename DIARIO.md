@@ -35,6 +35,15 @@ Diário de bordo do projeto. Quem escreve é o Claude, ao final de cada sessão,
 
 ---
 
+## 2026-11-02
+- **O que foi feito:** efeito de **blur progressivo** nas bordas da janela, inspirado em um site de referência. Novo componente `src/components/BlurProgressivo.astro`: uma faixa fixa embaixo (6 rem) e outra logo abaixo do cabeçalho (3,5 rem) que desfocam o conteúdo que passa por baixo, com o desfoque crescendo aos poucos em direção à borda. O rodapé ganhou um espaço extra embaixo para o último texto não ficar sob o desfoque.
+- **Decisões:**
+  - O efeito usa 6 camadas empilhadas, cada uma com desfoque maior e uma máscara em degradê. Uma camada só pareceria um vidro fosco comum.
+  - A faixa de cima começa com desfoque zero no topo da página e cresce com a rolagem (mesma regra do cabeçalho), para a chamada principal ficar nítida.
+  - Camadas ficam abaixo do cabeçalho, do banner de cookies e do botão do WhatsApp, e não bloqueiam cliques.
+- **Problemas:** havia um servidor de prévia antigo rodando e servindo o endereço errado; encerrei e subi outro. Conferi no Chrome (computador e celular simulado), com rolagem real. Ainda não testado em Safari/iPhone de verdade (o efeito usa `-webkit-` por precaução).
+- **Próximos passos:** olhar o efeito no iPhone; decidir se mantém as duas bordas ou só a de baixo. O arquivo `image.png` (print de referência) está na raiz e não foi versionado.
+
 ## 2026-11-01
 - **FECHAMENTO DO PROJETO (protótipo entregue):** as 9 etapas do `PLANO.md` foram concluídas e o site está publicado em https://heliastorres.github.io/manocchio/. Fora do protótipo, desde o início: login, painel de administração, formulário funcional e as páginas internas.
   - **Em aberto, sem bloquear a entrega:**
